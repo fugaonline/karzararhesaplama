@@ -6,52 +6,81 @@
   <title>Kar/Zarar Hesaplama</title>
   <style>
     * {
-      font-family: Arial, sans-serif;
       box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
       margin: 0;
       padding: 2rem;
-      background: #f7f9fb;
+      background: #f2f5f9;
+      color: #333;
     }
     h2 {
-      background: #1e88e5;
-      color: white;
-      padding: 1rem;
-      border-radius: 8px;
+      margin-bottom: 1rem;
+      color: #1a73e8;
     }
     section {
-      background: white;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       margin-bottom: 2rem;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
-    label, input, select, textarea {
-      display: block;
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .form-row > div {
+      flex: 1;
+      min-width: 200px;
+    }
+    input, select, textarea, button {
       width: 100%;
-      margin-bottom: 1rem;
-    }
-    input, select, textarea {
-      padding: 0.5rem;
-      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
       border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      background-color: #1a73e8;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #1669c1;
     }
     .radio-group {
       display: flex;
-      gap: 1rem;
+      gap: 1.5rem;
       margin-bottom: 1rem;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+    .summary-box {
+      background-color: #e9f0fb;
+      border-left: 5px solid #1a73e8;
+      padding: 1rem;
+      border-radius: 10px;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1rem;
     }
-    .summary-box {
-      padding: 1rem;
-      background: #e3f2fd;
-      border-left: 4px solid #1e88e5;
-      border-radius: 6px;
+    .summary-box strong {
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
@@ -59,18 +88,18 @@
   <h2>Özet</h2>
   <section class="grid">
     <div class="summary-box">
-      <strong>Web Sitesi</strong><br>
+      <strong>Web Sitesi</strong>
       Ciro: <span id="ws-ciro">0</span><br>
       Kar/Zarar: <span id="ws-kar">0</span><br>
       ROAS: <span id="ws-roas">0</span>
     </div>
     <div class="summary-box">
-      <strong>Trendyol</strong><br>
+      <strong>Trendyol</strong>
       Ciro: <span id="ty-ciro">0</span><br>
       Kar/Zarar: <span id="ty-kar">0</span>
     </div>
     <div class="summary-box">
-      <strong>Toplam</strong><br>
+      <strong>Toplam</strong>
       Ciro: <span id="toplam-ciro">0</span><br>
       Kar/Zarar: <span id="toplam-kar">0</span>
     </div>
@@ -83,11 +112,13 @@
         <label><input type="radio" name="kanal" value="Web Sitesi" required> Web Sitesi</label>
         <label><input type="radio" name="kanal" value="Trendyol"> Trendyol</label>
       </div>
-      <input type="month" name="tarih" required>
-      <input type="text" name="ciro" placeholder="Ciro (örn: 1234.56)" required>
-      <input type="text" name="siparis_adedi" placeholder="Sipariş Adedi">
-      <input type="text" name="urun_adedi" placeholder="Ürün Adedi">
-      <input type="text" name="urun_tutari" placeholder="Ürün Tutarı (örn: 1000.00)" required>
+      <div class="form-row">
+        <div><input type="month" name="tarih" required></div>
+        <div><input type="text" name="ciro" placeholder="Ciro (örn: 1234.56)" required></div>
+        <div><input type="text" name="siparis_adedi" placeholder="Sipariş Adedi"></div>
+        <div><input type="text" name="urun_adedi" placeholder="Ürün Adedi"></div>
+        <div><input type="text" name="urun_tutari" placeholder="Ürün Tutarı (örn: 1000.00)" required></div>
+      </div>
       <button type="submit">Gelir Ekle</button>
     </form>
   </section>
@@ -95,35 +126,42 @@
   <h2>Gider Girişi</h2>
   <section>
     <form id="expense-form">
-      <select name="kanal" required>
-        <option value="Web Sitesi">Web Sitesi</option>
-        <option value="Trendyol">Trendyol</option>
-        <option value="Operasyonel Giderler">Operasyonel Giderler</option>
-        <option value="Vergi">Vergi</option>
-      </select>
-      <input type="month" name="tarih" required>
-      <select name="gider_turu" required>
-        <option value="Ürün Maliyeti">Ürün Maliyeti</option>
-        <option value="Reklam">Reklam</option>
-        <option value="Kargo">Kargo</option>
-        <option value="Komisyon">Komisyon</option>
-        <option value="Operasyon">Operasyon</option>
-      </select>
-      <input type="text" name="tutar" placeholder="Tutar (örn: 500.00)" required>
-      <select name="kdv">
-        <option value="0">%0</option>
-        <option value="10">%10</option>
-        <option value="20">%20</option>
-        <option value="100">%100</option>
-      </select>
-      <textarea name="aciklama" placeholder="Açıklama"></textarea>
+      <div class="form-row">
+        <div>
+          <select name="kanal" required>
+            <option value="Web Sitesi">Web Sitesi</option>
+            <option value="Trendyol">Trendyol</option>
+            <option value="Operasyonel Giderler">Operasyonel Giderler</option>
+            <option value="Vergi">Vergi</option>
+          </select>
+        </div>
+        <div><input type="month" name="tarih" required></div>
+        <div>
+          <select name="gider_turu" required>
+            <option value="Ürün Maliyeti">Ürün Maliyeti</option>
+            <option value="Reklam">Reklam</option>
+            <option value="Kargo">Kargo</option>
+            <option value="Komisyon">Komisyon</option>
+            <option value="Operasyon">Operasyon</option>
+          </select>
+        </div>
+        <div><input type="text" name="tutar" placeholder="Tutar (örn: 500.00)" required></div>
+        <div>
+          <select name="kdv">
+            <option value="0">%0</option>
+            <option value="10">%10</option>
+            <option value="20">%20</option>
+            <option value="100">%100</option>
+          </select>
+        </div>
+        <div><textarea name="aciklama" placeholder="Açıklama"></textarea></div>
+      </div>
       <button type="submit">Gider Ekle</button>
     </form>
   </section>
 
   <script>
-    // JavaScript hesaplamaları, veri kayıtları ve özet hesaplamaları burada tanımlanacak.
-    // Veritabanı veya localStorage entegrasyonu yapılabilir.
+    // JavaScript işlemleri burada tanımlanacak
   </script>
 </body>
 </html>
