@@ -74,18 +74,32 @@
 </head>
 <body>
   <div class="tabs">
-    <button class="tab-button active" data-tab="gelir">Gelir</button>
-    <button class="tab-button" data-tab="gider">Gider</button>
-    <button class="tab-button" data-tab="rapor">Raporlar</button>
-  </div>
+  <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+  <button class="tab-button" data-tab="gelir">Gelir</button>
+  <button class="tab-button" data-tab="gider">Gider</button>
+  <button class="tab-button" data-tab="rapor">Raporlar</button>
+</div>
 
-  <div id="gelir" class="tab-content active">
-    <div id="dashboard" style="margin-bottom: 2rem;">
-      <h2>Özet Dashboard</h2>
-      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <div style="flex:1; min-width: 200px; background:#b2dfdb; padding:1rem; border-radius:10px; text-align:center;">
-          <strong>Toplam Ciro</strong>
-          <div id="summaryCiro">₺0</div>
+  <div id="dashboard" class="tab-content active">
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div style="flex:1; min-width: 200px; background:#b2dfdb; padding:1rem; border-radius:10px; text-align:center;">
+        <strong>Toplam Ciro</strong>
+        <div id="summaryCiro">₺0</div>
+      </div>
+      <div style="flex:1; min-width: 200px; background:#b2ebf2; padding:1rem; border-radius:10px; text-align:center;">
+        <strong>Toplam Ürün Tutarı</strong>
+        <div id="summaryUrun">₺0</div>
+      </div>
+      <div style="flex:1; min-width: 200px; background:#80deea; padding:1rem; border-radius:10px; text-align:center;">
+        <strong>Toplam Kargo Geliri</strong>
+        <div id="summaryKargo">₺0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="gelir" class="tab-content">
         </div>
         <div style="flex:1; min-width: 200px; background:#b2ebf2; padding:1rem; border-radius:10px; text-align:center;">
           <strong>Toplam Ürün Tutarı</strong>
