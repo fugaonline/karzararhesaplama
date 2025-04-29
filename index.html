@@ -5,7 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kar Zarar Hesaplama Paneli</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">const giderForm = document.getElementById('giderForm');
+let giderData = JSON.parse(localStorage.getItem('giderData') || '[]');
+
+// Gider kaydı formu gönderildiğinde
+if (giderForm) {
+  giderForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const yeniGider = {
+      kanal: document.getElementById('giderKanal').value,
+      tarih: document.getElementById('giderTarih').value,
+      tur: document.getElementById('giderTuru').value,
+      tutar: parseFloat(document.getElementById('giderTutar').value),
+      aciklama: document.getElementById('giderAciklama').value
+    };
+    giderData.push(yeniGider);
+    localStorage.setItem('giderData', JSON.stringify(giderData));
+    giderForm.reset();
+    updateDashboard();
+  });
+}
+
+
   <style>
     body {
       font-family: 'Nunito', sans-serif;
@@ -146,9 +167,32 @@
   </div>
 
   <div id="gider" class="tab-content">
-    <h2>Gider Girişi</h2>
-    <p>Bu alan yakında aktif olacak.</p>
-  </div>
+  <h2>Gider Girişi</h2>
+  <form id="giderForm">
+    <label>Kanal</label>
+    <select id="giderKanal" required>
+      <option value="">Seçiniz</option>
+      <option value="Web Sitesi">Web Sitesi</option>
+      <option value="Trendyol">Trendyol</option>
+      <option value="Diğer">Diğer</option>
+    </select>
+    <label>Tarih</label>
+    <input type="date" id="giderTarih" required>
+    <label>Gider Türü</label>
+    <select id="giderTuru" required>
+      <option value="">Seçiniz</option>
+      <option value="Ürün Maliyeti">Ürün Maliyeti</option>
+      <option value="Reklam">Reklam</option>
+      <option value="Kargo">Kargo</option>
+      <option value="Diğer">Diğer</option>
+    </select>
+    <label>Tutar (₺)</label>
+    <input type="number" id="giderTutar" step="0.01" required>
+    <label>Açıklama</label>
+    <input type="text" id="giderAciklama" placeholder="Opsiyonel açıklama">
+    <button type="submit">Kaydet</button>
+  </form>
+</div>
 
   <div id="rapor" class="tab-content">
     <h2>Raporlar</h2>
@@ -262,12 +306,52 @@
     function updateDashboard() {
   let webCiro = 0, trendyolCiro = 0;
   let webUrun = 0, trendyolUrun = 0;
+  let webReklam = 0, trendyolReklam = 0;
+  let webKargo = 0, trendyolKargo = 0;
+  let webDiger = 0, trendyolDiger = 0;
 
   data.forEach(item => {
     if (item.channel === 'Web Sitesi') {
       webCiro += parseFloat(item.ciro);
       webUrun += parseFloat(item.urunTutari);
     }
+    if (item.channel === 'Trendyol') {
+      trendyolCiro += parseFloat(item.ciro);
+      trendyolUrun += parseFloat(item.urunTutari);
+    }
+  });
+
+  let webKarZarar = webCiro - (webUrun + webReklam + webKargo + webDiger);
+  let trendyolKarZarar = trendyolCiro - (trendyolUrun + trendyolReklam + trendyolKargo + trendyolDiger);
+
+  document.getElementById('webCiro').textContent = '₺' + webCiro.toFixed(2);
+  document.getElementById('webUrun').textContent = '₺' + webUrun.toFixed(2);
+  document.getElementById('webReklam').textContent = '₺' + webReklam.toFixed(2);
+  document.getElementById('webKargo').textContent = '₺' + webKargo.toFixed(2);
+  document.getElementById('webDiger').textContent = '₺' + webDiger.toFixed(2);
+  document.getElementById('webKarZarar').textContent = '₺' + webKarZarar.toFixed(2);
+
+  document.getElementById('trendyolCiro').textContent = '₺' + trendyolCiro.toFixed(2);
+  document.getElementById('trendyolUrun').textContent = '₺' + trendyolUrun.toFixed(2);
+  document.getElementById('trendyolReklam').textContent = '₺' + trendyolReklam.toFixed(2);
+  document.getElementById('trendyolKargo').textContent = '₺' + trendyolKargo.toFixed(2);
+  document.getElementById('trendyolDiger').textContent = '₺' + trendyolDiger.toFixed(2);
+  document.getElementById('trendyolKarZarar').textContent = '₺' + trendyolKarZarar.toFixed(2);
+
+  const toplamCiro = webCiro + trendyolCiro;
+  const toplamUrun = webUrun + trendyolUrun;
+  const toplamReklam = webReklam + trendyolReklam;
+  const toplamKargo = webKargo + trendyolKargo;
+  const toplamDiger = webDiger + trendyolDiger;
+  const toplamKarZarar = toplamCiro - (toplamUrun + toplamReklam + toplamKargo + toplamDiger);
+
+  document.getElementById('toplamCiro').textContent = '₺' + toplamCiro.toFixed(2);
+  document.getElementById('toplamUrun').textContent = '₺' + toplamUrun.toFixed(2);
+  document.getElementById('toplamReklam').textContent = '₺' + toplamReklam.toFixed(2);
+  document.getElementById('toplamKargo').textContent = '₺' + toplamKargo.toFixed(2);
+  document.getElementById('toplamDiger').textContent = '₺' + toplamDiger.toFixed(2);
+  document.getElementById('toplamKarZarar').textContent = '₺' + toplamKarZarar.toFixed(2);
+}
     if (item.channel === 'Trendyol') {
       trendyolCiro += parseFloat(item.ciro);
       trendyolUrun += parseFloat(item.urunTutari);
