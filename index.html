@@ -1,192 +1,155 @@
-    <!-- RAPORLAR -->
-    <section id="rapor" class="hidden">
-      <h1 class="text-3xl font-bold mb-4 text-gray-800">Raporlar</h1>
+// One-page kar/zarar yazılımı
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Papa from "papaparse";
 
-      <!-- Tarih Seçici -->
-      <div class="flex flex-wrap items-center gap-4 mb-6">
-        <label class="text-gray-700 font-medium">Tarih Aralığı:</label>
-        <input type="date" id="raporBaslangic" class="border p-2 rounded">
-        <span class="text-gray-500">-</span>
-        <input type="date" id="raporBitis" class="border p-2 rounded">
-        <select id="hazirTarihSec" class="border p-2 rounded">
-          <option value="">Özel</option>
-          <option value="today">Bugün</option>
-          <option value="week">Son 7 Gün</option>
-          <option value="month">Bu Ay</option>
-          <option value="lastmonth">Geçen Ay</option>
-          <option value="30days">Son 30 Gün</option>
-        </select>
-        <button onclick="raporFiltrele()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Uygula</button>
-      </div>
+export default function KarZararPaneli() {
+  const [gelirler, setGelirler] = useState([]);
+  const [giderler, setGiderler] = useState([]);
+  const [gelirForm, setGelirForm] = useState({ kanal: "Web Sitesi", ay: "", yil: "", ciro: "", siparis: "", urun: "", urunTutari: "" });
+  const [giderForm, setGiderForm] = useState({ kanal: "Web Sitesi", ay: "", yil: "", tur: "", tutar: "", kdv: "", aciklama: "" });
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Günlük Ciro</h2>
-          <p class="text-3xl font-bold text-gray-800" id="ortCiro">-</p>
-        </div>
+  const handleGelirEkle = () => {
+    setGelirler([...gelirler, { ...gelirForm, ciro: parseFloat(gelirForm.ciro) }]);
+    setGelirForm({ kanal: "Web Sitesi", ay: "", yil: "", ciro: "", siparis: "", urun: "", urunTutari: "" });
+  };
 
-        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Sipariş Paketi</h2>
-          <p class="text-3xl font-bold text-gray-800" id="ortSiparis">-</p>
-        </div>
+  const handleGiderEkle = () => {
+    setGiderler([...giderler, { ...giderForm, tutar: parseFloat(giderForm.tutar) }]);
+    setGiderForm({ kanal: "Web Sitesi", ay: "", yil: "", tur: "", tutar: "", kdv: "", aciklama: "" });
+  };
 
-        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Satılan Ürün</h2>
-          <p class="text-3xl font-bold text-gray-800" id="ortUrun">-</p>
-        </div>
-      </div>
+  const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+  const yillar = [2023, 2024, 2025];
+  const giderTurleri = ["Ürün Maliyeti", "Reklam", "Kargo", "Komisyon", "Operasyon"];
 
-      <div class="bg-green-50 border border-green-300 rounded-xl p-6 shadow-md mb-6">
-        <h2 class="text-xl font-semibold text-green-700 mb-2">Kargo Durumu</h2>
-        <p class="text-gray-700">Kargo Geliri: <span id="kargoGeliri">-</span></p>
-        <p class="text-gray-700">Kargo Gideri: <span id="kargoGideri">-</span></p>
-        <p class="font-bold text-green-800 mt-2">Pozisyon: <span id="kargoPozisyon">-</span></p>
-      </div>
+  const handleExcelImport = (e, type) => {
+    Papa.parse(e.target.files[0], {
+      header: true,
+      complete: (results) => {
+        const parsedData = results.data.map((item) => ({ ...item, tutar: parseFloat(item.tutar) }));
+        if (type === "gelir") setGelirler([...gelirler, ...parsedData]);
+        else setGiderler([...giderler, ...parsedData]);
+      }
+    });
+  };
 
-      <div class="bg-blue-50 border border-blue-300 rounded-xl p-6 shadow-md">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">KDV Durumu</h2>
-        <p class="text-gray-700">Hesaplanan KDV: <span id="hesaplananKDV">-</span></p>
-        <p class="text-gray-700">İndirilecek KDV: <span id="indirilecekKDV">-</span></p>
-        <p class="font-bold text-blue-800 mt-2">KDV Pozisyonu: <span id="kdvPozisyonu">-</span></p>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const tabs = {
-      dashboard: document.getElementById('dashboard'),
-      gelir: document.getElementById('gelir'),
-      gider: document.getElementById('gider'),
-      rapor: document.getElementById('rapor')
-    };
-
-    document.getElementById('tab-dashboard').onclick = () => showTab('dashboard');
-    document.getElementById('tab-gelir').onclick = () => showTab('gelir');
-    document.getElementById('tab-gider').onclick = () => showTab('gider');
-    document.getElementById('tab-rapor').onclick = () => showTab('rapor');
-
-    function showTab(tab) {
-      Object.keys(tabs).forEach(key => tabs[key].classList.add('hidden'));
-      tabs[tab].classList.remove('hidden');
+  const hesapla = (kanal) => {
+    const kanalGelir = gelirler.filter((g) => g.kanal === kanal).reduce((sum, g) => sum + (parseFloat(g.ciro) || 0), 0);
+    const kanalGider = giderler.filter((g) => g.kanal === kanal).reduce((sum, g) => sum + g.tutar, 0);
+    let roasDegeri = "-";
+    if (kanal === "Web Sitesi") {
+      const reklamGideri = giderler.filter((g) => g.kanal === kanal && g.tur === "Reklam").reduce((sum, g) => sum + g.tutar, 0);
+      roasDegeri = reklamGideri > 0 ? (kanalGelir / reklamGideri).toFixed(2) : "-";
     }
+    return { ciro: kanalGelir, karZarar: kanalGelir - kanalGider, roas: roasDegeri };
+  };
 
-    function gelirKaydet() {
-      const kanal = document.getElementById('gelirKanal').value;
-      const tarih = document.getElementById('gelirTarih').value;
-      const ciro = document.getElementById('gelirCiro').value;
-      const siparis = document.getElementById('gelirSiparis').value;
-      const urun = document.getElementById('gelirUrun').value;
-      const urunTutari = document.getElementById('gelirUrunTutari').value;
+  const web = hesapla("Web Sitesi");
+  const trendyol = hesapla("Trendyol");
+  const toplam = { ciro: web.ciro + trendyol.ciro, karZarar: web.karZarar + trendyol.karZarar, roas: "-" };
 
-      const tbody = document.getElementById('gelirTab
-    <!-- RAPORLAR -->
-    <section id="rapor" class="hidden">
-      <h1 class="text-3xl font-bold mb-4 text-gray-800">Raporlar</h1>
+  return (
+    <div className="grid grid-cols-1 gap-6 p-6">
+      <Card>
+        <CardContent className="space-y-4">
+          <h2 className="text-xl font-bold">Gelir Girişi</h2>
+          <select onChange={(e) => setGelirForm({ ...gelirForm, ay: e.target.value })} value={gelirForm.ay}>
+            <option value="">Ay Seç</option>
+            {aylar.map((ay) => (<option key={ay} value={ay}>{ay}</option>))}
+          </select>
+          <select onChange={(e) => setGelirForm({ ...gelirForm, yil: e.target.value })} value={gelirForm.yil}>
+            <option value="">Yıl Seç</option>
+            {yillar.map((y) => (<option key={y} value={y}>{y}</option>))}
+          </select>
+          <Input placeholder="Ciro" value={gelirForm.ciro} onChange={(e) => setGelirForm({ ...gelirForm, ciro: e.target.value })} />
+          <Input placeholder="Sipariş Adedi" value={gelirForm.siparis} onChange={(e) => setGelirForm({ ...gelirForm, siparis: e.target.value })} />
+          <Input placeholder="Ürün Adedi" value={gelirForm.urun} onChange={(e) => setGelirForm({ ...gelirForm, urun: e.target.value })} />
+          <Input placeholder="Ürün Tutarı" value={gelirForm.urunTutari} onChange={(e) => setGelirForm({ ...gelirForm, urunTutari: e.target.value })} />
+          <RadioGroup value={gelirForm.kanal} onValueChange={(val) => setGelirForm({ ...gelirForm, kanal: val })}>
+            <RadioGroupItem value="Web Sitesi" id="gelir-web" /> <Label htmlFor="gelir-web">Web Sitesi</Label>
+            <RadioGroupItem value="Trendyol" id="gelir-trendyol" /> <Label htmlFor="gelir-trendyol">Trendyol</Label>
+          </RadioGroup>
+          <Button onClick={handleGelirEkle}>Ekle</Button>
+          <Input type="file" accept=".csv" onChange={(e) => handleExcelImport(e, "gelir")} />
+        </CardContent>
+      </Card>
 
-      <!-- Tarih Seçici -->
-      <div class="flex flex-wrap items-center gap-4 mb-6">
-        <label class="text-gray-700 font-medium">Tarih Aralığı:</label>
-        <input type="date" id="raporBaslangic" class="border p-2 rounded">
-        <span class="text-gray-500">-</span>
-        <input type="date" id="raporBitis" class="border p-2 rounded">
-        <select id="hazirTarihSec" class="border p-2 rounded">
-          <option value="">Özel</option>
-          <option value="today">Bugün</option>
-          <option value="week">Son 7 Gün</option>
-          <option value="month">Bu Ay</option>
-          <option value="lastmonth">Geçen Ay</option>
-          <option value="30days">Son 30 Gün</option>
-        </select>
-        <button onclick="raporFiltrele()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Uygula</button>
-      </div>
+      <Card>
+        <CardContent className="space-y-4">
+          <h2 className="text-xl font-bold">Gider Girişi</h2>
+          <select onChange={(e) => setGiderForm({ ...giderForm, ay: e.target.value })} value={giderForm.ay}>
+            <option value="">Ay Seç</option>
+            {aylar.map((ay) => (<option key={ay} value={ay}>{ay}</option>))}
+          </select>
+          <select onChange={(e) => setGiderForm({ ...giderForm, yil: e.target.value })} value={giderForm.yil}>
+            <option value="">Yıl Seç</option>
+            {yillar.map((y) => (<option key={y} value={y}>{y}</option>))}
+          </select>
+          <select onChange={(e) => setGiderForm({ ...giderForm, tur: e.target.value })} value={giderForm.tur}>
+            <option value="">Gider Türü</option>
+            {giderTurleri.map((tur) => (<option key={tur} value={tur}>{tur}</option>))}
+          </select>
+          <Input placeholder="Tutar" value={giderForm.tutar} onChange={(e) => setGiderForm({ ...giderForm, tutar: e.target.value })} />
+          <select onChange={(e) => setGiderForm({ ...giderForm, kdv: e.target.value })} value={giderForm.kdv}>
+            <option value="">KDV Seç</option>
+            <option value="0">%0</option>
+            <option value="10">%10</option>
+            <option value="20">%20</option>
+            <option value="100">%100</option>
+          </select>
+          <Input placeholder="Açıklama" value={giderForm.aciklama} onChange={(e) => setGiderForm({ ...giderForm, aciklama: e.target.value })} />
+          <RadioGroup value={giderForm.kanal} onValueChange={(val) => setGiderForm({ ...giderForm, kanal: val })}>
+            <RadioGroupItem value="Web Sitesi" id="gider-web" /> <Label htmlFor="gider-web">Web Sitesi</Label>
+            <RadioGroupItem value="Trendyol" id="gider-trendyol" /> <Label htmlFor="gider-trendyol">Trendyol</Label>
+            <RadioGroupItem value="Operasyonel Giderler" id="gider-op" /> <Label htmlFor="gider-op">Operasyonel Giderler</Label>
+            <RadioGroupItem value="Vergi" id="gider-vergi" /> <Label htmlFor="gider-vergi">Vergi</Label>
+          </RadioGroup>
+          <Button onClick={handleGiderEkle}>Ekle</Button>
+          <Input type="file" accept=".csv" onChange={(e) => handleExcelImport(e, "gider")} />
+        </CardContent>
+      </Card>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Günlük Ciro</h2>
-          <p class="text-3xl font-bold text-gray-800" id="ortCiro">-</p>
-        </div>
-
-        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Sipariş Paketi</h2>
-          <p class="text-3xl font-bold text-gray-800" id="ortSiparis">-</p>
-        </div>
-
-        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Satılan Ürün</h2>
-          <p class="text-3xl font-bold text-gray-800" id="ortUrun">-</p>
-        </div>
-      </div>
-
-      <div class="bg-green-50 border border-green-300 rounded-xl p-6 shadow-md mb-6">
-        <h2 class="text-xl font-semibold text-green-700 mb-2">Kargo Durumu</h2>
-        <p class="text-gray-700">Kargo Geliri: <span id="kargoGeliri">-</span></p>
-        <p class="text-gray-700">Kargo Gideri: <span id="kargoGideri">-</span></p>
-        <p class="font-bold text-green-800 mt-2">Pozisyon: <span id="kargoPozisyon">-</span></p>
-      </div>
-
-      <div class="bg-blue-50 border border-blue-300 rounded-xl p-6 shadow-md">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">KDV Durumu</h2>
-        <p class="text-gray-700">Hesaplanan KDV: <span id="hesaplananKDV">-</span></p>
-        <p class="text-gray-700">İndirilecek KDV: <span id="indirilecekKDV">-</span></p>
-        <p class="font-bold text-blue-800 mt-2">KDV Pozisyonu: <span id="kdvPozisyonu">-</span></p>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const tabs = {
-      dashboard: document.getElementById('dashboard'),
-      gelir: document.getElementById('gelir'),
-      gider: document.getElementById('gider'),
-      rapor: document.getElementById('rapor')
-    };
-
-    document.getElementById('tab-dashboard').onclick = () => showTab('dashboard');
-    document.getElementById('tab-gelir').onclick = () => showTab('gelir');
-    document.getElementById('tab-gider').onclick = () => showTab('gider');
-    document.getElementById('tab-rapor').onclick = () => showTab('rapor');
-
-    function showTab(tab) {
-      Object.keys(tabs).forEach(key => tabs[key].classList.add('hidden'));
-      tabs[tab].classList.remove('hidden');
-    }
-
-    function gelirKaydet() {
-      const kanal = document.getElementById('gelirKanal').value;
-      const tarih = document.getElementById('gelirTarih').value;
-      const ciro = document.getElementById('gelirCiro').value;
-      const siparis = document.getElementById('gelirSiparis').value;
-      const urun = document.getElementById('gelirUrun').value;
-      const urunTutari = document.getElementById('gelirUrunTutari').value;
-
-      const tbody = document.getElementById('gelirTablo');
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td class="p-2 border">${kanal}</td>
-        <td class="p-2 border">${tarih}</td>
-        <td class="p-2 border">${Number(ciro).toLocaleString('tr-TR')}</td>
-        <td class="p-2 border">${siparis}</td>
-        <td class="p-2 border">${urun}</td>
-        <td class="p-2 border">${Number(urunTutari).toLocaleString('tr-TR')}</td>
-      `;
-      tbody.appendChild(row);
-    }
-
-    function giderKaydet() {
-      // Gider kayıt işlemleri buraya eklenecek
-      alert("Gider kaydetme özelliği eklenecek.");
-    }
-
-    function dashboardFiltrele() {
-      // Dashboard tarih filtreleme işlemleri burada yapılacak
-      console.log("Dashboard filtre çalıştı");
-    }
-
-    function raporFiltrele() {
-      // Raporlar tarih filtreleme işlemleri burada yapılacak
-      console.log("Rapor filtre çalıştı");
-    }
-  </script>
-
-</body>
-</html>
+      <Card>
+        <CardContent>
+          <h2 className="text-xl font-bold mb-4">Özet</h2>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Kanal</TableHead>
+                <TableHead>Ciro</TableHead>
+                <TableHead>Kar / Zarar</TableHead>
+                <TableHead>ROAS</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>Web Sitesi</TableCell>
+                <TableCell>{web.ciro.toFixed(2)} TL</TableCell>
+                <TableCell>{web.karZarar.toFixed(2)} TL</TableCell>
+                <TableCell>{web.roas}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Trendyol</TableCell>
+                <TableCell>{trendyol.ciro.toFixed(2)} TL</TableCell>
+                <TableCell>{trendyol.karZarar.toFixed(2)} TL</TableCell>
+                <TableCell>-</TableCell>
+              </TableRow>
+              <TableRow className="font-bold">
+                <TableCell>Toplam</TableCell>
+                <TableCell>{toplam.ciro.toFixed(2)} TL</TableCell>
+                <TableCell>{toplam.karZarar.toFixed(2)} TL</TableCell>
+                <TableCell>{toplam.roas}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
