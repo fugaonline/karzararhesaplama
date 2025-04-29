@@ -105,7 +105,28 @@
 </div>
 <div id="gelir" class="tab-content">
   <h2>GELİR GİRİŞİ</h2>
-  <p>Gelir formu buraya eklenecek</p>
+  <form id="incomeForm" style="display: grid; gap: 1rem; max-width: 600px; margin: auto;">
+    <label>Kanal Seçimi</label>
+    <select id="channel" required>
+      <option value="">Seçiniz</option>
+      <option value="Web Sitesi">Web Sitesi</option>
+      <option value="Trendyol">Trendyol</option>
+    </select>
+    <label>Tarih</label>
+    <input type="date" id="date" required>
+    <label>Ciro (₺)</label>
+    <input type="number" id="ciro" step="0.01" required>
+    <label>Sipariş Adedi</label>
+    <input type="number" id="siparisAdedi" required>
+    <label>Ürün Adedi</label>
+    <input type="number" id="urunAdedi" required>
+    <label>Ürün Tutarı (₺ - KDV Hariç)</label>
+    <input type="number" id="urunTutari" step="0.01" required>
+    <button type="submit">Kaydet</button>
+  </form>
+  <div id="gelirTabloAlani" style="margin-top: 2rem;">
+    <!-- Kayıtlı gelir verileri burada tablo şeklinde gösterilecek -->
+  </div>
 </div>
 <div id="gider" class="tab-content">
   <h2>GİDER GİRİŞİ</h2>
