@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gelir Girişi | Kar Zarar Hesaplama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f3f3f3;
+      font-family: 'Nunito', sans-serif;
+      background: #e0f7fa;
       margin: 0;
       padding: 2rem;
     }
@@ -16,44 +17,49 @@
       max-width: 600px;
       margin: auto;
       padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     h2 {
       text-align: center;
       margin-bottom: 1.5rem;
-      color: #333;
+      color: #00796b;
     }
     label {
       display: block;
       margin: 0.5rem 0 0.2rem;
       font-weight: bold;
+      color: #004d40;
     }
     input, select {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.6rem;
+      margin-top: 5px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 1rem;
     }
     button {
       margin-top: 1.5rem;
       width: 100%;
       padding: 0.75rem;
-      background-color: #007bff;
+      background-color: #00796b;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
+      transition: background-color 0.3s;
     }
     button:hover {
-      background-color: #0056b3;
+      background-color: #004d40;
     }
     .result {
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       font-weight: bold;
       text-align: center;
-      color: #28a745;
+      color: #00695c;
+      font-size: 1.2rem;
     }
   </style>
 </head>
@@ -72,7 +78,7 @@
       <label for="date">Tarih</label>
       <input type="date" id="date" required />
 
-      <label for="ciro">Ciro (Sipariş Tutarı)</label>
+      <label for="ciro">Ciro (Sipariş Tutarı) (TL)</label>
       <input type="number" id="ciro" step="0.01" required />
 
       <label for="siparisAdedi">Sipariş Adedi</label>
@@ -81,7 +87,7 @@
       <label for="urunAdedi">Satılan Ürün Adedi</label>
       <input type="number" id="urunAdedi" required />
 
-      <label for="urunTutari">Ürün Tutarı (KDV Dahil)</label>
+      <label for="urunTutari">Ürün Tutarı (KDV Hariç) (TL)</label>
       <input type="number" id="urunTutari" step="0.01" required />
 
       <button type="submit">Kaydet</button>
@@ -98,14 +104,15 @@
       e.preventDefault();
 
       const ciro = parseFloat(document.getElementById('ciro').value);
-      const urunTutari = parseFloat(document.getElementById('urunTutari').value);
+      const urunTutariKdvHaric = parseFloat(document.getElementById('urunTutari').value);
 
-      if (isNaN(ciro) || isNaN(urunTutari)) {
+      if (isNaN(ciro) || isNaN(urunTutariKdvHaric)) {
         result.textContent = 'Geçerli sayılar giriniz.';
         return;
       }
 
-      const kargoGeliri = ciro - urunTutari;
+      const urunTutariKdvDahil = urunTutariKdvHaric * 1.10;
+      const kargoGeliri = ciro - urunTutariKdvDahil;
 
       result.textContent = `Kargo Geliri: ${kargoGeliri.toFixed(2)} TL`;
     });
