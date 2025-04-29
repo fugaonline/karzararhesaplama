@@ -1,104 +1,129 @@
-// One-page kar/zarar yazılımı (modern tasarım - özet üstte, ROAS ayrı)
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Papa from "papaparse";
-
-export default function KarZararPaneli() {
-  const [gelirler, setGelirler] = useState([]);
-  const [giderler, setGiderler] = useState([]);
-  const [gelirForm, setGelirForm] = useState({ kanal: "Web Sitesi", ay: "", yil: "", ciro: "", siparis: "", urun: "", urunTutari: "" });
-  const [giderForm, setGiderForm] = useState({ kanal: "Web Sitesi", ay: "", yil: "", tur: "", tutar: "", kdv: "", aciklama: "" });
-
-  const handleGelirEkle = () => {
-    setGelirler([...gelirler, { ...gelirForm, ciro: parseFloat(gelirForm.ciro) }]);
-    setGelirForm({ kanal: "Web Sitesi", ay: "", yil: "", ciro: "", siparis: "", urun: "", urunTutari: "" });
-  };
-
-  const handleGiderEkle = () => {
-    setGiderler([...giderler, { ...giderForm, tutar: parseFloat(giderForm.tutar) }]);
-    setGiderForm({ kanal: "Web Sitesi", ay: "", yil: "", tur: "", tutar: "", kdv: "", aciklama: "" });
-  };
-
-  const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-  const yillar = [2023, 2024, 2025];
-  const giderTurleri = ["Ürün Maliyeti", "Reklam", "Kargo", "Komisyon", "Operasyon"];
-
-  const handleExcelImport = (e, type) => {
-    Papa.parse(e.target.files[0], {
-      header: true,
-      complete: (results) => {
-        const parsedData = results.data.map((item) => ({ ...item, tutar: parseFloat(item.tutar) }));
-        if (type === "gelir") setGelirler([...gelirler, ...parsedData]);
-        else setGiderler([...giderler, ...parsedData]);
-      }
-    });
-  };
-
-  const hesapla = (kanal) => {
-    const kanalGelir = gelirler.filter((g) => g.kanal === kanal).reduce((sum, g) => sum + (parseFloat(g.ciro) || 0), 0);
-    const kanalGider = giderler.filter((g) => g.kanal === kanal).reduce((sum, g) => sum + g.tutar, 0);
-    let roasDegeri = "-";
-    if (kanal === "Web Sitesi") {
-      const reklamGideri = giderler.filter((g) => g.kanal === kanal && g.tur === "Reklam").reduce((sum, g) => sum + g.tutar, 0);
-      roasDegeri = reklamGideri > 0 ? (kanalGelir / reklamGideri).toFixed(2) : "-";
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kar/Zarar Hesaplama</title>
+  <style>
+    * {
+      font-family: Arial, sans-serif;
+      box-sizing: border-box;
     }
-    return { ciro: kanalGelir, karZarar: kanalGelir - kanalGider, roas: roasDegeri };
-  };
-
-  const web = hesapla("Web Sitesi");
-  const trendyol = hesapla("Trendyol");
-  const toplam = { ciro: web.ciro + trendyol.ciro, karZarar: web.karZarar + trendyol.karZarar };
-
-  return (
-    <div className="grid grid-cols-1 gap-8 p-6 max-w-6xl mx-auto">
-
-      <Card>
-        <CardContent className="space-y-4">
-          <h2 className="text-2xl font-bold mb-2">Genel Özet</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Kanal</TableHead>
-                <TableHead>Ciro</TableHead>
-                <TableHead>Kar / Zarar</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Web Sitesi</TableCell>
-                <TableCell>{web.ciro.toFixed(2)} TL</TableCell>
-                <TableCell>{web.karZarar.toFixed(2)} TL</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Trendyol</TableCell>
-                <TableCell>{trendyol.ciro.toFixed(2)} TL</TableCell>
-                <TableCell>{trendyol.karZarar.toFixed(2)} TL</TableCell>
-              </TableRow>
-              <TableRow className="font-bold">
-                <TableCell>Toplam</TableCell>
-                <TableCell>{toplam.ciro.toFixed(2)} TL</TableCell>
-                <TableCell>{toplam.karZarar.toFixed(2)} TL</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent>
-          <h2 className="text-xl font-semibold">Web Sitesi ROAS</h2>
-          <p className="text-lg mt-2">{web.roas !== "-" ? `ROAS: ${web.roas}` : "ROAS hesaplanamadı (Reklam gideri eksik)"}</p>
-        </CardContent>
-      </Card>
-
-      {/* GELİR GİRİŞİ */}
-      {/* ... (aynı gelir ve gider formları buraya yazılacak, önceki koddan kopyalanarak modernleştirilebilir) */}
-
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #f7f9fb;
+    }
+    h2 {
+      background: #1e88e5;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    section {
+      background: white;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    label, input, select, textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    input, select, textarea {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .summary-box {
+      padding: 1rem;
+      background: #e3f2fd;
+      border-left: 4px solid #1e88e5;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Özet</h2>
+  <section class="grid">
+    <div class="summary-box">
+      <strong>Web Sitesi</strong><br>
+      Ciro: <span id="ws-ciro">0</span><br>
+      Kar/Zarar: <span id="ws-kar">0</span><br>
+      ROAS: <span id="ws-roas">0</span>
     </div>
-  );
-}
+    <div class="summary-box">
+      <strong>Trendyol</strong><br>
+      Ciro: <span id="ty-ciro">0</span><br>
+      Kar/Zarar: <span id="ty-kar">0</span>
+    </div>
+    <div class="summary-box">
+      <strong>Toplam</strong><br>
+      Ciro: <span id="toplam-ciro">0</span><br>
+      Kar/Zarar: <span id="toplam-kar">0</span>
+    </div>
+  </section>
+
+  <h2>Gelir Girişi</h2>
+  <section>
+    <form id="income-form">
+      <div class="radio-group">
+        <label><input type="radio" name="kanal" value="Web Sitesi" required> Web Sitesi</label>
+        <label><input type="radio" name="kanal" value="Trendyol"> Trendyol</label>
+      </div>
+      <input type="month" name="tarih" required>
+      <input type="text" name="ciro" placeholder="Ciro (örn: 1234.56)" required>
+      <input type="text" name="siparis_adedi" placeholder="Sipariş Adedi">
+      <input type="text" name="urun_adedi" placeholder="Ürün Adedi">
+      <input type="text" name="urun_tutari" placeholder="Ürün Tutarı (örn: 1000.00)" required>
+      <button type="submit">Gelir Ekle</button>
+    </form>
+  </section>
+
+  <h2>Gider Girişi</h2>
+  <section>
+    <form id="expense-form">
+      <select name="kanal" required>
+        <option value="Web Sitesi">Web Sitesi</option>
+        <option value="Trendyol">Trendyol</option>
+        <option value="Operasyonel Giderler">Operasyonel Giderler</option>
+        <option value="Vergi">Vergi</option>
+      </select>
+      <input type="month" name="tarih" required>
+      <select name="gider_turu" required>
+        <option value="Ürün Maliyeti">Ürün Maliyeti</option>
+        <option value="Reklam">Reklam</option>
+        <option value="Kargo">Kargo</option>
+        <option value="Komisyon">Komisyon</option>
+        <option value="Operasyon">Operasyon</option>
+      </select>
+      <input type="text" name="tutar" placeholder="Tutar (örn: 500.00)" required>
+      <select name="kdv">
+        <option value="0">%0</option>
+        <option value="10">%10</option>
+        <option value="20">%20</option>
+        <option value="100">%100</option>
+      </select>
+      <textarea name="aciklama" placeholder="Açıklama"></textarea>
+      <button type="submit">Gider Ekle</button>
+    </form>
+  </section>
+
+  <script>
+    // JavaScript hesaplamaları, veri kayıtları ve özet hesaplamaları burada tanımlanacak.
+    // Veritabanı veya localStorage entegrasyonu yapılabilir.
+  </script>
+</body>
+</html>
