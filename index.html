@@ -260,10 +260,9 @@
     });
 
     function updateDashboard() {
-      document.getElementById('summaryCiro').textContent = '₺' + data.reduce((a, b) => a + parseFloat(b.ciro), 0).toFixed(2);
-      document.getElementById('summaryUrun').textContent = '₺' + data.reduce((a, b) => a + parseFloat(b.urunTutari), 0).toFixed(2);
-      document.getElementById('summaryKargo').textContent = '₺' + data.reduce((a, b) => a + parseFloat(b.kargoGeliri), 0).toFixed(2);
-    }
+  // Geçici olarak boş bırakıldı çünkü eski dashboard alanları kaldırıldı
+  // Yeni dashboard verileri hesaplanacaksa burası yeniden yazılmalı
+}
 
     function formatDate(date) {
       if (typeof date === 'string') return date;
