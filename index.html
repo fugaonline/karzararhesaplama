@@ -1,124 +1,104 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-Ticaret Yönetim Paneli</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-
-  <!-- Sekmeler -->
-  <nav class="bg-white shadow-md flex justify-around py-4 text-lg font-semibold sticky top-0 z-10">
-    <button id="tab-dashboard" class="hover:text-blue-500">DASHBOARD</button>
-    <button id="tab-gelir" class="hover:text-blue-500">GELİR</button>
-    <button id="tab-gider" class="hover:text-blue-500">GİDER</button>
-    <button id="tab-rapor" class="hover:text-blue-500">RAPORLAR</button>
-  </nav>
-
-  <main class="flex-grow p-6" id="content">
-
-    <!-- DASHBOARD -->
-    <section id="dashboard">
-      <h1 class="text-3xl font-bold mb-8 text-gray-800">Dashboard</h1>
-
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <!-- Web Sitesi -->
-        <div class="bg-pink-100 border border-pink-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-pink-700 mb-2">Web Sitesi</h2>
-          <p class="text-md text-gray-800">Ciro: <span id="webCiro">-</span></p>
-          <p class="text-md text-gray-800">Kar/Zarar: <span id="webKarZarar">-</span></p>
-        </div>
-
-        <!-- Trendyol -->
-        <div class="bg-orange-100 border border-orange-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-orange-700 mb-2">Trendyol</h2>
-          <p class="text-md text-gray-800">Ciro: <span id="trendyolCiro">-</span></p>
-          <p class="text-md text-gray-800">Kar/Zarar: <span id="trendyolKarZarar">-</span></p>
-        </div>
-
-        <!-- Toplam -->
-        <div class="bg-green-100 border border-green-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-green-700 mb-2">Toplam</h2>
-          <p class="text-md text-gray-800">Ciro: <span id="toplamCiro">-</span></p>
-          <p class="text-md text-gray-800">Kar/Zarar: <span id="toplamKarZarar">-</span></p>
-        </div>
-
-        <!-- ROAS -->
-        <div class="bg-blue-100 border border-blue-300 rounded-xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-blue-700 mb-2">ROAS (Web)</h2>
-          <p class="text-2xl font-bold text-blue-900" id="roasValue">-</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- GELİR GİRİŞİ -->
-    <section id="gelir" class="hidden">
-      <h1 class="text-3xl font-bold mb-8 text-gray-800">Gelir Girişi</h1>
-      <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <select class="border p-2 rounded" id="gelirKanal">
-          <option value="web">Web Sitesi</option>
-          <option value="trendyol">Trendyol</option>
-        </select>
-        <input type="date" class="border p-2 rounded" id="gelirTarih">
-        <input type="number" placeholder="Ciro" class="border p-2 rounded" id="gelirCiro">
-        <input type="number" placeholder="Sipariş Adedi" class="border p-2 rounded" id="gelirSiparis">
-        <input type="number" placeholder="Ürün Adedi" class="border p-2 rounded" id="gelirUrun">
-        <input type="number" placeholder="Ürün Tutarı" class="border p-2 rounded" id="gelirUrunTutari">
-        <button type="button" onclick="gelirKaydet()" class="bg-blue-400 hover:bg-blue-500 p-2 rounded text-white mt-4">Kaydet</button>
-      </form>
-
-      <div class="mt-8">
-        <h2 class="text-xl font-bold mb-4">Gelirler Tablosu</h2>
-        <table class="min-w-full border">
-          <thead class="bg-gray-200">
-            <tr>
-              <th class="p-2 border">Kanal</th>
-              <th class="p-2 border">Tarih</th>
-              <th class="p-2 border">Ciro</th>
-              <th class="p-2 border">Sipariş</th>
-              <th class="p-2 border">Ürün</th>
-              <th class="p-2 border">Ürün Tutarı</th>
-            </tr>
-          </thead>
-          <tbody id="gelirTablo" class="text-center"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- GİDER GİRİŞİ -->
-    <section id="gider" class="hidden">
-      <h1 class="text-3xl font-bold mb-8 text-gray-800">Gider Girişi</h1>
-      <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <select class="border p-2 rounded" id="giderKanal">
-          <option value="web">Web Sitesi</option>
-          <option value="trendyol">Trendyol</option>
-          <option value="operasyon">Operasyonel Giderler</option>
-          <option value="vergi">Vergi</option>
-        </select>
-        <input type="date" class="border p-2 rounded" id="giderTarih">
-        <select class="border p-2 rounded" id="giderTuru">
-          <option value="urun">Ürün Maliyeti</option>
-          <option value="reklam">Reklam</option>
-          <option value="kargo">Kargo</option>
-          <option value="komisyon">Komisyon</option>
-          <option value="operasyon">Operasyon</option>
-        </select>
-        <input type="number" placeholder="Tutar" class="border p-2 rounded" id="giderTutar">
-        <select class="border p-2 rounded" id="giderKdv">
-          <option value="0">%0</option>
-          <option value="10">%10</option>
-          <option value="20">%20</option>
-          <option value="100">%100</option>
-        </select>
-        <input type="text" placeholder="Açıklama" class="border p-2 rounded" id="giderAciklama">
-        <button type="button" onclick="giderKaydet()" class="bg-red-400 hover:bg-red-500 p-2 rounded text-white mt-4">Kaydet</button>
-      </form>
-    </section>
-
     <!-- RAPORLAR -->
     <section id="rapor" class="hidden">
-      <h1 class="text-3xl font-bold mb-8 text-gray-800">Raporlar</h1>
+      <h1 class="text-3xl font-bold mb-4 text-gray-800">Raporlar</h1>
+
+      <!-- Tarih Seçici -->
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <label class="text-gray-700 font-medium">Tarih Aralığı:</label>
+        <input type="date" id="raporBaslangic" class="border p-2 rounded">
+        <span class="text-gray-500">-</span>
+        <input type="date" id="raporBitis" class="border p-2 rounded">
+        <select id="hazirTarihSec" class="border p-2 rounded">
+          <option value="">Özel</option>
+          <option value="today">Bugün</option>
+          <option value="week">Son 7 Gün</option>
+          <option value="month">Bu Ay</option>
+          <option value="lastmonth">Geçen Ay</option>
+          <option value="30days">Son 30 Gün</option>
+        </select>
+        <button onclick="raporFiltrele()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Uygula</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Günlük Ciro</h2>
+          <p class="text-3xl font-bold text-gray-800" id="ortCiro">-</p>
+        </div>
+
+        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Sipariş Paketi</h2>
+          <p class="text-3xl font-bold text-gray-800" id="ortSiparis">-</p>
+        </div>
+
+        <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold text-gray-700 mb-2">Ortalama Satılan Ürün</h2>
+          <p class="text-3xl font-bold text-gray-800" id="ortUrun">-</p>
+        </div>
+      </div>
+
+      <div class="bg-green-50 border border-green-300 rounded-xl p-6 shadow-md mb-6">
+        <h2 class="text-xl font-semibold text-green-700 mb-2">Kargo Durumu</h2>
+        <p class="text-gray-700">Kargo Geliri: <span id="kargoGeliri">-</span></p>
+        <p class="text-gray-700">Kargo Gideri: <span id="kargoGideri">-</span></p>
+        <p class="font-bold text-green-800 mt-2">Pozisyon: <span id="kargoPozisyon">-</span></p>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-300 rounded-xl p-6 shadow-md">
+        <h2 class="text-xl font-semibold text-blue-700 mb-2">KDV Durumu</h2>
+        <p class="text-gray-700">Hesaplanan KDV: <span id="hesaplananKDV">-</span></p>
+        <p class="text-gray-700">İndirilecek KDV: <span id="indirilecekKDV">-</span></p>
+        <p class="font-bold text-blue-800 mt-2">KDV Pozisyonu: <span id="kdvPozisyonu">-</span></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tabs = {
+      dashboard: document.getElementById('dashboard'),
+      gelir: document.getElementById('gelir'),
+      gider: document.getElementById('gider'),
+      rapor: document.getElementById('rapor')
+    };
+
+    document.getElementById('tab-dashboard').onclick = () => showTab('dashboard');
+    document.getElementById('tab-gelir').onclick = () => showTab('gelir');
+    document.getElementById('tab-gider').onclick = () => showTab('gider');
+    document.getElementById('tab-rapor').onclick = () => showTab('rapor');
+
+    function showTab(tab) {
+      Object.keys(tabs).forEach(key => tabs[key].classList.add('hidden'));
+      tabs[tab].classList.remove('hidden');
+    }
+
+    function gelirKaydet() {
+      const kanal = document.getElementById('gelirKanal').value;
+      const tarih = document.getElementById('gelirTarih').value;
+      const ciro = document.getElementById('gelirCiro').value;
+      const siparis = document.getElementById('gelirSiparis').value;
+      const urun = document.getElementById('gelirUrun').value;
+      const urunTutari = document.getElementById('gelirUrunTutari').value;
+
+      const tbody = document.getElementById('gelirTab
+    <!-- RAPORLAR -->
+    <section id="rapor" class="hidden">
+      <h1 class="text-3xl font-bold mb-4 text-gray-800">Raporlar</h1>
+
+      <!-- Tarih Seçici -->
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <label class="text-gray-700 font-medium">Tarih Aralığı:</label>
+        <input type="date" id="raporBaslangic" class="border p-2 rounded">
+        <span class="text-gray-500">-</span>
+        <input type="date" id="raporBitis" class="border p-2 rounded">
+        <select id="hazirTarihSec" class="border p-2 rounded">
+          <option value="">Özel</option>
+          <option value="today">Bugün</option>
+          <option value="week">Son 7 Gün</option>
+          <option value="month">Bu Ay</option>
+          <option value="lastmonth">Geçen Ay</option>
+          <option value="30days">Son 30 Gün</option>
+        </select>
+        <button onclick="raporFiltrele()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Uygula</button>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white border border-gray-300 rounded-xl p-6 shadow-lg">
@@ -195,6 +175,16 @@
     function giderKaydet() {
       // Gider kayıt işlemleri buraya eklenecek
       alert("Gider kaydetme özelliği eklenecek.");
+    }
+
+    function dashboardFiltrele() {
+      // Dashboard tarih filtreleme işlemleri burada yapılacak
+      console.log("Dashboard filtre çalıştı");
+    }
+
+    function raporFiltrele() {
+      // Raporlar tarih filtreleme işlemleri burada yapılacak
+      console.log("Rapor filtre çalıştı");
     }
   </script>
 
