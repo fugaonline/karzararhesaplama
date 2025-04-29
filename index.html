@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gelir Girişi | Kar Zarar Hesaplama</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body {
       font-family: 'Nunito', sans-serif;
@@ -14,7 +15,7 @@
     }
     .container {
       background: white;
-      max-width: 600px;
+      max-width: 800px;
       margin: auto;
       padding: 2rem;
       border-radius: 15px;
@@ -31,7 +32,7 @@
       font-weight: bold;
       color: #004d40;
     }
-    input, select {
+    input, select, button {
       width: 100%;
       padding: 0.6rem;
       margin-top: 5px;
@@ -40,32 +41,45 @@
       font-size: 1rem;
     }
     button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.75rem;
       background-color: #00796b;
       color: white;
-      border: none;
-      border-radius: 8px;
       cursor: pointer;
-      font-size: 1rem;
       transition: background-color 0.3s;
     }
     button:hover {
       background-color: #004d40;
     }
     .result {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       font-weight: bold;
       text-align: center;
       color: #00695c;
-      font-size: 1.2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    th {
+      background-color: #b2dfdb;
+    }
+    .actions button {
+      width: auto;
+      margin: 0 2px;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>GÜNLÜK GELİR GİRİŞİ</h2>
+
     <form id="incomeForm">
       <label for="channel">Gelir Kanalı</label>
       <select id="channel" required>
@@ -93,29 +107,115 @@
       <button type="submit">Kaydet</button>
     </form>
 
-    <div class="result" id="kargoGeliriSonuc"></div>
+    <input type="file" id="excelInput" accept=".xlsx" style="margin-top: 1.5rem;" />
+
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Kanal</th>
+          <th>Ciro</th>
+          <th>Sipariş</th>
+          <th>Ürün</th>
+          <th>Ürün Tutarı</th>
+          <th>Kargo Geliri</th>
+          <th>İşlem</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
   <script>
     const form = document.getElementById('incomeForm');
-    const result = document.getElementById('kargoGeliriSonuc');
+    const tableBody = document.querySelector('#dataTable tbody');
+    const excelInput = document.getElementById('excelInput');
+
+    let data = JSON.parse(localStorage.getItem('gelirData') || '[]');
+    renderTable();
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-
-      const ciro = parseFloat(document.getElementById('ciro').value);
-      const urunTutariKdvHaric = parseFloat(document.getElementById('urunTutari').value);
-
-      if (isNaN(ciro) || isNaN(urunTutariKdvHaric)) {
-        result.textContent = 'Geçerli sayılar giriniz.';
-        return;
-      }
-
-      const urunTutariKdvDahil = urunTutariKdvHaric * 1.10;
-      const kargoGeliri = ciro - urunTutariKdvDahil;
-
-      result.textContent = `Kargo Geliri: ${kargoGeliri.toFixed(2)} TL`;
+      const entry = getFormData();
+      data.push(entry);
+      saveAndRender();
+      form.reset();
     });
+
+    function getFormData() {
+      const ciro = parseFloat(document.getElementById('ciro').value);
+      const urunTutari = parseFloat(document.getElementById('urunTutari').value);
+      return {
+        date: document.getElementById('date').value,
+        channel: document.getElementById('channel').value,
+        ciro,
+        siparis: parseInt(document.getElementById('siparisAdedi').value),
+        urun: parseInt(document.getElementById('urunAdedi').value),
+        urunTutari,
+        kargoGeliri: +(ciro - urunTutari * 1.1).toFixed(2)
+      };
+    }
+
+    function renderTable() {
+      tableBody.innerHTML = '';
+      data.forEach((row, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.date}</td>
+          <td>${row.channel}</td>
+          <td>${row.ciro}</td>
+          <td>${row.siparis}</td>
+          <td>${row.urun}</td>
+          <td>${row.urunTutari}</td>
+          <td>${row.kargoGeliri}</td>
+          <td class="actions">
+            <button onclick="deleteRow(${i})">Sil</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function deleteRow(index) {
+      data.splice(index, 1);
+      saveAndRender();
+    }
+
+    function saveAndRender() {
+      localStorage.setItem('gelirData', JSON.stringify(data));
+      renderTable();
+    }
+
+    excelInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const workbook = XLSX.read(e.target.result, { type: 'binary' });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet);
+        rows.forEach(row => {
+          if (row['Sipariş Tarihi'] && row['Sipariş Toplam Tutar']) {
+            data.push({
+              date: formatDate(row['Sipariş Tarihi']),
+              channel: 'Web Sitesi',
+              ciro: row['Sipariş Toplam Tutar'],
+              siparis: row['Sipariş Adet'],
+              urun: row['Ürün Adet'],
+              urunTutari: row['Ürün Toplam Tutar'],
+              kargoGeliri: +(row['Sipariş Toplam Tutar'] - row['Ürün Toplam Tutar'] * 1.1).toFixed(2)
+            });
+          }
+        });
+        saveAndRender();
+        excelInput.value = '';
+      };
+      reader.readAsBinaryString(file);
+    });
+
+    function formatDate(date) {
+      if (typeof date === 'string') return date;
+      return new Date(date).toISOString().split('T')[0];
+    }
   </script>
 </body>
 </html>
