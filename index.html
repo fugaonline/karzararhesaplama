@@ -187,7 +187,11 @@
       data.push(entry);
       saveAndRender();
       form.reset();
-    });
+      document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelector('[data-tab="gelir"]').classList.add('active');
+      document.getElementById('gelir').classList.add('active');
+    }););
 
     function getFormData() {
       const ciro = parseFloat(document.getElementById('ciro').value);
