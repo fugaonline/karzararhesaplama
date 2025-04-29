@@ -1,1 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Ticaret Yönetim Paneli</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <!-- Üst Sekmeler -->
+  <nav class="bg-white shadow-md flex justify-around py-4 text-lg font-semibold sticky top-0 z-10">
+    <button id="tab-dashboard" class="hover:text-pink-400">DASHBOARD</button>
+    <button id="tab-gelir" class="hover:text-pink-400">GELİR</button>
+    <button id="tab-gider" class="hover:text-pink-400">GİDER</button>
+    <button id="tab-rapor" class="hover:text-pink-400">RAPORLAR</button>
+  </nav>
+
+  <!-- Sayfa İçerik Alanı -->
+  <main class="flex-grow p-6" id="content">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="hidden">
+      <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- ROAS Kutusu -->
+        <div class="bg-green-100 rounded-lg p-6 shadow-md">
+          <h2 class="text-xl font-bold mb-2">ROAS (Web)</h2>
+          <p class="text-3xl font-semibold" id="roasValue">-</p>
+        </div>
+
+        <!-- Web Sitesi Kutucuğu -->
+        <div class="bg-pink-100 rounded-lg p-6 shadow-md">
+          <h2 class="text-xl font-bold mb-2">Web Sitesi</h2>
+          <p class="text-sm">Ciro: <span id="webCiro">-</span></p>
+          <p class="text-sm">Sipariş: <span id="webSiparis">-</span></p>
+          <p class="text-sm">Ürün: <span id="webUrun">-</span></p>
+        </div>
+
+        <!-- Trendyol Kutucuğu -->
+        <div class="bg-orange-100 rounded-lg p-6 shadow-md">
+          <h2 class="text-xl font-bold mb-2">Trendyol</h2>
+          <p class="text-sm">Ciro: <span id="trendyolCiro">-</span></p>
+          <p class="text-sm">Sipariş: <span id="trendyolSiparis">-</span></p>
+          <p class="text-sm">Ürün: <span id="trendyolUrun">-</span></p>
+        </div>
+
+        <!-- Toplam Kutusu -->
+        <div class="bg-green-200 rounded-lg p-6 shadow-md">
+          <h2 class="text-xl font-bold mb-2">Toplam</h2>
+          <p class="text-sm">Ciro: <span id="toplamCiro">-</span></p>
+          <p class="text-sm">Sipariş: <span id="toplamSiparis">-</span></p>
+          <p class="text-sm">Ürün: <span id="toplamUrun">-</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GELİR GİRİŞİ -->
+    <section id="gelir" class="hidden">
+      <h1 class="text-2xl font-bold mb-6">Gelir Girişi</h1>
+      <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <select class="border p-2 rounded" id="gelirKanal">
+          <option value="web">Web Sitesi</option>
+          <option value="trendyol">Trendyol</option>
+        </select>
+        <input type="date" class="border p-2 rounded" id="gelirTarih">
+        <input type="number" placeholder="Ciro" class="border p-2 rounded" id="gelirCiro">
+        <input type="number" placeholder="Sipariş Adedi" class="border p-2 rounded" id="gelirSiparis">
+        <input type="number" placeholder="Ürün Adedi" class="border p-2 rounded" id="gelirUrun">
+        <input type="number" placeholder="Ürün Tutarı" class="border p-2 rounded" id="gelirUrunTutari">
+        <button type="button" onclick="gelirKaydet()" class="bg-pink-300 hover:bg-pink-400 p-2 rounded text-white mt-4">Kaydet</button>
+      </form>
+
+      <div class="mt-8">
+        <h2 class="text-xl font-bold mb-4">Gelirler Tablosu</h2>
+        <table class="min-w-full border">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="p-2 border">Kanal</th>
+              <th class="p-2 border">Tarih</th>
+              <th class="p-2 border">Ciro</th>
+              <th class="p-2 border">Sipariş</th>
+              <th class="p-2 border">Ürün</th>
+              <th class="p-2 border">Ürün Tutarı</th>
+            </tr>
+          </thead>
+          <tbody id="gelirTablo" class="text-center"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- GİDER GİRİŞİ -->
+    <section id="gider" class="hidden">
+      <h1 class="text-2xl font-bold mb-6">Gider Girişi</h1>
+      <!-- Buraya gider formu ve gider tablosu eklenecek (sonraki adımda detaylı) -->
+      <p class="text-gray-500">Gider Girişi ekranı yakında geliyor...</p>
+    </section>
+
+    <!-- RAPORLAR -->
+    <section id="rapor" class="hidden">
+      <h1 class="text-2xl font-bold mb-6">Raporlar</h1>
+      <!-- Buraya rapor kutucukları ve filtreler eklenecek (sonraki adımda detaylı) -->
+      <p class="text-gray-500">Raporlar ekranı yakında geliyor...</p>
+    </section>
+
+  </main>
+
+  <script>
+    // Tab Geçişi
+    const tabs = {
+      dashboard: document.getElementById('dashboard'),
+      gelir: document.getElementById('gelir'),
+      gider: document.getElementById('gider'),
+      rapor: document.getElementById('rapor')
+    };
+
+    document.getElementById('tab-dashboard').onclick = () => showTab('dashboard');
+    document.getElementById('tab-gelir').onclick = () => showTab('gelir');
+    document.getElementById('tab-gider').onclick = () => showTab('gider');
+    document.getElementById('tab-rapor').onclick = () => showTab('rapor');
+
+    function showTab(tab) {
+      Object.keys(tabs).forEach(key => tabs[key].classList.add('hidden'));
+      tabs[tab].classList.remove('hidden');
+    }
+
+    // Gelir Kaydetme
+    function gelirKaydet() {
+      const kanal = document.getElementById('gelirKanal').value;
+      const tarih = document.getElementById('gelirTarih').value;
+      const ciro = document.getElementById('gelirCiro').value;
+      const siparis = document.getElementById('gelirSiparis').value;
+      const urun = document.getElementById('gelirUrun').value;
+      const urunTutari = document.getElementById('gelirUrunTutari').value;
+
+      const tbody = document.getElementById('gelirTablo');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="p-2 border">${kanal}</td>
+        <td class="p-2 border">${tarih}</td>
+        <td class="p-2 border">${Number(ciro).toLocaleString('tr-TR')}</td>
+        <td class="p-2 border">${siparis}</td>
+        <td class="p-2 border">${urun}</td>
+        <td class="p-2 border">${Number(urunTutari).toLocaleString('tr-TR')}</td>
+      `;
+      tbody.appendChild(row);
+    }
+  </script>
+
+</body>
+</html>
 
