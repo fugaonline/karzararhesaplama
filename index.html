@@ -5,37 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kar Zarar Hesaplama Paneli</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">const incomeForm = document.getElementById('incomeForm');
-const gelirTablo = document.getElementById('gelirTablo');
-let gelirData = [];
-
-incomeForm.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const kanal = document.querySelector('input[name="channel"]:checked')?.value;
-  const tarih = document.getElementById('date').value;
-  const ciro = document.getElementById('ciro').value;
-  const siparis = document.getElementById('siparisAdedi').value;
-  const urunAdet = document.getElementById('urunAdedi').value;
-  const urunTutar = document.getElementById('urunTutari').value;
-  const satir = { kanal, tarih, ciro, siparis, urunAdet, urunTutar };
-  gelirData.push(satir);
-  updateGelirTablo();
-  incomeForm.reset();
-});
-
-function updateGelirTablo() {
-  gelirTablo.innerHTML = '';
-  gelirData.forEach((veri, index) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td style="padding: 0.5rem; text-align: center;">${veri.kanal}</td>
-      <td style="text-align: center;">${veri.tarih}</td>
-      <td style="text-align: right;">₺${parseFloat(veri.ciro).toFixed(2)}</td>
-      <td style="text-align: center;">${veri.siparis}</td>
-      <td style="text-align: center;">${veri.urunAdet}</td>
-      <td style="text-align: right;">₺${parseFloat(veri.urunTutar).toFixed(2)}</td>
-      <td style="text-align: center;">
-<style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
     body {
       margin: 0;
       font-family: 'Nunito', sans-serif;
@@ -62,7 +33,6 @@ function updateGelirTablo() {
       cursor: pointer;
       transition: background-color 0.3s ease;
       flex: 0 0 auto;
-      min-width: unset;
     }
     .tab-button.active, .tab-button:hover {
       background-color: #00796b;
@@ -90,7 +60,7 @@ function updateGelirTablo() {
   </style>
 </head>
 <body>
-  <div class="tabs">
+<div class="tabs">
   <button class="tab-button active" data-tab="dashboard">DASHBOARD</button>
   <button class="tab-button" data-tab="gelir">GELİR</button>
   <button class="tab-button" data-tab="gider">GİDER</button>
@@ -104,34 +74,8 @@ function updateGelirTablo() {
       <p style="font-size: 1.5rem; font-weight: bold; color: #00796b;" id="webRoasTop">0</p>
     </div>
   </div>
-  <h2>DASHBOARD</h2>
-  <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
-    <div style="flex: 1 1 300px; background: #f8e6e9; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 0.5rem;">
-  <h3>Web Sitesi</h3>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Ciro:</strong> <span id="webCiro">₺0,00</span></div>
-    <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Ürün Maliyeti:</strong> <span id="webMaliyet">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Reklam Gideri:</strong> <span id="webReklam">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Kargo Gideri:</strong> <span id="webKargoGider">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Kar/Zarar:</strong> <span id="webKarZarar">₺0,00</span></div>
 </div>
 
-    <div style="flex: 1 1 300px; background: #fff0e0; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 0.5rem;">
-  <h3>Trendyol</h3>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Ciro:</strong> <span id="trendyolCiro">₺0,00</span></div>
-    <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Ürün Maliyeti:</strong> <span id="trendyolMaliyet">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Reklam Gideri:</strong> <span id="trendyolReklam">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Kargo Gideri:</strong> <span id="trendyolKargoGider">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Komisyon Gideri:</strong> <span id="trendyolKomisyon">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Kar/Zarar:</strong> <span id="trendyolKarZarar">₺0,00</span></div>
-</div>
-
-    <div style="flex: 1 1 300px; background: #e3f6e0; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 0.5rem;">
-  <h3>Toplam</h3>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Ciro:</strong> <span id="toplamCiro">₺0,00</span></div>
-  <div style="background:#fff; border-radius:8px; padding:0.5rem;"><strong>Kar/Zarar:</strong> <span id="toplamKarZarar">₺0,00</span></div>
-</div>
-  </div>
-</div>
 <div id="gelir" class="tab-content">
   <h2>GELİR GİRİŞİ</h2>
   <form id="incomeForm" style="display: flex; flex-direction: column; gap: 1.25rem; max-width: 850px; margin: auto; background: #ffffff; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
@@ -168,86 +112,66 @@ function updateGelirTablo() {
     </div>
     <button type="submit" style="background-color: #00796b; color: white; font-weight: bold; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer; font-size: 1rem;">Kaydet</button>
   </form>
+
   <div id="gelirTabloAlani" style="margin-top: 2rem;">
     <table style="width:100%; border-collapse: collapse; background:#fff; border-radius: 8px; overflow: hidden;">
-  <thead style="background-color: #00796b; color: white;">
-    <tr>
-      <th style="padding: 0.75rem;">Kanal</th>
-      <th>Tarih</th>
-      <th>Ciro</th>
-      <th>Sipariş</th>
-      <th>Ürün Adedi</th>
-      <th>Ürün Tutarı</th>
-      <th>Sil</th>
-    </tr>
-  </thead>
-  <tbody id="gelirTablo"></tbody>
-</table>
+      <thead style="background-color: #00796b; color: white;">
+        <tr>
+          <th style="padding: 0.75rem;">Kanal</th>
+          <th>Tarih</th>
+          <th>Ciro</th>
+          <th>Sipariş</th>
+          <th>Ürün Adedi</th>
+          <th>Ürün Tutarı</th>
+          <th>Sil</th>
+        </tr>
+      </thead>
+      <tbody id="gelirTablo"></tbody>
+    </table>
   </div>
 </div>
-<div id="gider" class="tab-content">
-  <h2>GİDER GİRİŞİ</h2>
-  <p>Gider formu buraya eklenecek</p>
-</div>
-<div id="raporlar" class="tab-content">
-  <h2>RAPORLAR</h2>
-  <p>Rapor filtreleri ve ortalamalar buraya eklenecek</p>
-</div>
 
-  <script>
-    const tabs = document.querySelectorAll('.tab-button');
-    const contents = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-    // Uygulamanın yeni yapısı buraya entegre edilecek
-    // Tasarım ve interaktif davranışlar detaylandırılacak
-    // Tüm yönlendirme, giriş ve hesaplama mantığı Vue/React olmadan vanilla JS ile yapılacak (isteğe göre değiştirilebilir)
+<script>
   const incomeForm = document.getElementById('incomeForm');
-const gelirTablo = document.getElementById('gelirTablo');
-let gelirData = [];
+  const gelirTablo = document.getElementById('gelirTablo');
+  let gelirData = [];
 
-incomeForm.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const kanal = document.querySelector('input[name="channel"]:checked')?.value;
-  const tarih = document.getElementById('date').value;
-  const ciro = document.getElementById('ciro').value;
-  const siparis = document.getElementById('siparisAdedi').value;
-  const urunAdet = document.getElementById('urunAdedi').value;
-  const urunTutar = document.getElementById('urunTutari').value;
-  const satir = { kanal, tarih, ciro, siparis, urunAdet, urunTutar };
-  gelirData.push(satir);
-  updateGelirTablo();
-  incomeForm.reset();
-});
-
-function updateGelirTablo() {
-  gelirTablo.innerHTML = '';
-  gelirData.forEach((veri, index) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td style="padding: 0.5rem; text-align: center;">${veri.kanal}</td>
-      <td style="text-align: center;">${veri.tarih}</td>
-      <td style="text-align: right;">₺${parseFloat(veri.ciro).toFixed(2)}</td>
-      <td style="text-align: center;">${veri.siparis}</td>
-      <td style="text-align: center;">${veri.urunAdet}</td>
-      <td style="text-align: right;">₺${parseFloat(veri.urunTutar).toFixed(2)}</td>
-      <td style="text-align: center;"><button onclick="silGelir(${index})" style="color:red; background:none; border:none; cursor:pointer;">Sil</button></td>
-    `;
-    gelirTablo.appendChild(row);
+  incomeForm?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const kanal = document.querySelector('input[name="channel"]:checked')?.value;
+    const tarih = document.getElementById('date').value;
+    const ciro = document.getElementById('ciro').value;
+    const siparis = document.getElementById('siparisAdedi').value;
+    const urunAdet = document.getElementById('urunAdedi').value;
+    const urunTutar = document.getElementById('urunTutari').value;
+    const satir = { kanal, tarih, ciro, siparis, urunAdet, urunTutar };
+    gelirData.push(satir);
+    updateGelirTablo();
+    incomeForm.reset();
   });
-}
 
-function silGelir(index) {
-  gelirData.splice(index, 1);
-  updateGelirTablo();
-}
+  function updateGelirTablo() {
+    if (!gelirTablo) return;
+    gelirTablo.innerHTML = '';
+    gelirData.forEach((veri, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="padding: 0.5rem; text-align: center;">${veri.kanal}</td>
+        <td style="text-align: center;">${veri.tarih}</td>
+        <td style="text-align: right;">₺${parseFloat(veri.ciro).toFixed(2)}</td>
+        <td style="text-align: center;">${veri.siparis}</td>
+        <td style="text-align: center;">${veri.urunAdet}</td>
+        <td style="text-align: right;">₺${parseFloat(veri.urunTutar).toFixed(2)}</td>
+        <td style="text-align: center;"><button onclick="silGelir(${index})" style="color:red; background:none; border:none; cursor:pointer;">Sil</button></td>
+      `;
+      gelirTablo.appendChild(row);
+    });
+  }
 
+  function silGelir(index) {
+    gelirData.splice(index, 1);
+    updateGelirTablo();
+  }
 </script>
 </body>
 </html>
