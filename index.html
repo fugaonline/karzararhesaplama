@@ -5,168 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kar Zarar Hesaplama Paneli</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: #f0f4f8;
-      margin: 0;
-      padding: 2rem;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-    }
-    .tab-button {
-      padding: 1rem 2rem;
-      border: none;
-      background: #00796b;
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 6px 6px 0 0;
-      margin-right: 4px;
-    }
-    .tab-button.active {
-      background: #004d40;
-    }
-    .tab-content {
-      display: none;
-      padding: 2rem;
-      background: white;
-      border-radius: 0 0 12px 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      max-width: 800px;
-      margin: auto;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    form {
-      display: grid;
-      gap: 1rem;
-    }
-    label {
-      font-weight: bold;
-    }
-    input, select, button {
-      padding: 0.6rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    button[type="submit"] {
-      background: #00796b;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button[type="submit"]:hover {
-      background: #004d40;
-    }
-  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
-  const giderForm = document.getElementById('giderForm');
-  let giderData = JSON.parse(localStorage.getItem('giderData') || '[]');
-
-  if (giderForm) {
-    giderForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const yeniGider = {
-        kanal: document.getElementById('giderKanal').value,
-        tarih: document.getElementById('giderTarih').value,
-        tur: document.getElementById('giderTuru').value,
-        tutar: parseFloat(document.getElementById('giderTutar').value),
-        aciklama: document.getElementById('giderAciklama').value
-      };
-      giderData.push(yeniGider);
-      localStorage.setItem('giderData', JSON.stringify(giderData));
-      giderForm.reset();
-      updateDashboard();
-    });
-  }
-</script>
-<div class="tabs">
-  <button class="tab-button active" data-tab="dashboard">Dashboard</button>
-  <button class="tab-button" data-tab="gelir">Gelir</button>
-  <button class="tab-button" data-tab="gider">Gider</button>
-  <button class="tab-button" data-tab="rapor">Raporlar</button>
+</head>
+<body>
+  <div class="tabs">
+  <button class="tab-button active" data-tab="dashboard">DASHBOARD</button>
+  <button class="tab-button" data-tab="gelir">GELİR</button>
+  <button class="tab-button" data-tab="gider">GİDER</button>
+  <button class="tab-button" data-tab="raporlar">RAPORLAR</button>
 </div>
 
 <div id="dashboard" class="tab-content active">
-  <h2>Dashboard</h2>
-  <p>Dashboard içeriği buraya tekrar eklenecek.</p>
+  <h2>DASHBOARD</h2>
+  <p>Dashboard kutucukları ve tarih filtresi buraya gelecek</p>
 </div>
-
 <div id="gelir" class="tab-content">
-  <h2>Gelir Girişi</h2>
-  <form id="incomeForm">
-    <label>Kanal</label>
-    <select id="channel" required>
-      <option value="">Seçiniz</option>
-      <option value="Web Sitesi">Web Sitesi</option>
-      <option value="Trendyol">Trendyol</option>
-      <option value="Diğer">Diğer</option>
-    </select>
-    <label>Tarih</label>
-    <input type="date" id="date" required>
-    <label>Ciro</label>
-    <input type="number" id="ciro" step="0.01" required>
-    <label>Sipariş Adedi</label>
-    <input type="number" id="siparisAdedi" required>
-    <label>Ürün Adedi</label>
-    <input type="number" id="urunAdedi" required>
-    <label>Ürün Tutarı (KDV Hariç)</label>
-    <input type="number" id="urunTutari" step="0.01" required>
-    <button type="submit">Kaydet</button>
-  </form>
+  <h2>GELİR GİRİŞİ</h2>
+  <p>Gelir formu buraya eklenecek</p>
 </div>
-
 <div id="gider" class="tab-content">
-  <h2>Gider Girişi</h2>
-  <form id="giderForm">
-    <label>Kanal</label>
-    <select id="giderKanal" required>
-      <option value="">Seçiniz</option>
-      <option value="Web Sitesi">Web Sitesi</option>
-      <option value="Trendyol">Trendyol</option>
-      <option value="Diğer">Diğer</option>
-    </select>
-    <label>Tarih</label>
-    <input type="date" id="giderTarih" required>
-    <label>Gider Türü</label>
-    <select id="giderTuru" required>
-      <option value="">Seçiniz</option>
-      <option value="Ürün Maliyeti">Ürün Maliyeti</option>
-      <option value="Reklam">Reklam</option>
-      <option value="Kargo">Kargo</option>
-      <option value="Diğer">Diğer</option>
-    </select>
-    <label>Tutar (₺)</label>
-    <input type="number" id="giderTutar" step="0.01" required>
-    <label>Açıklama</label>
-    <input type="text" id="giderAciklama" placeholder="Opsiyonel açıklama">
-    <button type="submit">Kaydet</button>
-  </form>
+  <h2>GİDER GİRİŞİ</h2>
+  <p>Gider formu buraya eklenecek</p>
+</div>
+<div id="raporlar" class="tab-content">
+  <h2>RAPORLAR</h2>
+  <p>Rapor filtreleri ve ortalamalar buraya eklenecek</p>
 </div>
 
-<div id="rapor" class="tab-content">
-  <h2>Raporlar</h2>
-  <p>Raporlar sekmesi yeniden aktif edildi.</p>
-</div>
-
-<script>
-  const tabs = document.querySelectorAll('.tab-button');
-  const contents = document.querySelectorAll('.tab-content');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.tab).classList.add('active');
-    });
-  });
-</script>
+  <script>
+    // Uygulamanın yeni yapısı buraya entegre edilecek
+    // Tasarım ve interaktif davranışlar detaylandırılacak
+    // Tüm yönlendirme, giriş ve hesaplama mantığı Vue/React olmadan vanilla JS ile yapılacak (isteğe göre değiştirilebilir)
+  </script>
 </body>
 </html>
