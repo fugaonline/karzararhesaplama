@@ -80,6 +80,23 @@
   </div>
 
   <div id="gelir" class="tab-content active">
+    <div id="dashboard" style="margin-bottom: 2rem;">
+      <h2>Özet Dashboard</h2>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <div style="flex:1; min-width: 200px; background:#b2dfdb; padding:1rem; border-radius:10px; text-align:center;">
+          <strong>Toplam Ciro</strong>
+          <div id="summaryCiro">₺0</div>
+        </div>
+        <div style="flex:1; min-width: 200px; background:#b2ebf2; padding:1rem; border-radius:10px; text-align:center;">
+          <strong>Toplam Ürün Tutarı</strong>
+          <div id="summaryUrun">₺0</div>
+        </div>
+        <div style="flex:1; min-width: 200px; background:#80deea; padding:1rem; border-radius:10px; text-align:center;">
+          <strong>Toplam Kargo Geliri</strong>
+          <div id="summaryKargo">₺0</div>
+        </div>
+      </div>
+    </div>
     <h2>Gelir Girişi</h2>
     <form id="incomeForm">
       <label>Kanal</label>
@@ -137,6 +154,7 @@
     const excelInput = document.getElementById('excelInput');
     let data = JSON.parse(localStorage.getItem('gelirData') || '[]');
     renderTable();
+    updateDashboard();
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -162,6 +180,7 @@
 
     function renderTable() {
       tableBody.innerHTML = '';
+      let toplamCiro = 0, toplamUrun = 0, toplamKargo = 0;
       data.forEach((row, i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -174,7 +193,10 @@
           <td>${row.kargoGeliri}</td>
           <td><button onclick="deleteRow(${i})">Sil</button></td>
         `;
-        tableBody.appendChild(tr);
+                tableBody.appendChild(tr);
+        toplamCiro += parseFloat(row.ciro);
+        toplamUrun += parseFloat(row.urunTutari);
+        toplamKargo += parseFloat(row.kargoGeliri);
       });
     }
 
@@ -186,6 +208,7 @@
     function saveAndRender() {
       localStorage.setItem('gelirData', JSON.stringify(data));
       renderTable();
+      updateDashboard();
     }
 
     excelInput.addEventListener('change', function(e) {
@@ -213,6 +236,12 @@
       };
       reader.readAsBinaryString(file);
     });
+
+    function updateDashboard() {
+      document.getElementById('summaryCiro').textContent = '₺' + data.reduce((a, b) => a + parseFloat(b.ciro), 0).toFixed(2);
+      document.getElementById('summaryUrun').textContent = '₺' + data.reduce((a, b) => a + parseFloat(b.urunTutari), 0).toFixed(2);
+      document.getElementById('summaryKargo').textContent = '₺' + data.reduce((a, b) => a + parseFloat(b.kargoGeliri), 0).toFixed(2);
+    }
 
     function formatDate(date) {
       if (typeof date === 'string') return date;
