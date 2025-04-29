@@ -5,7 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kar Zarar Hesaplama Paneli</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">const incomeForm = document.getElementById('incomeForm');
+const gelirTablo = document.getElementById('gelirTablo');
+let gelirData = [];
+
+incomeForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const kanal = document.querySelector('input[name="channel"]:checked')?.value;
+  const tarih = document.getElementById('date').value;
+  const ciro = document.getElementById('ciro').value;
+  const siparis = document.getElementById('siparisAdedi').value;
+  const urunAdet = document.getElementById('urunAdedi').value;
+  const urunTutar = document.getElementById('urunTutari').value;
+  const satir = { kanal, tarih, ciro, siparis, urunAdet, urunTutar };
+  gelirData.push(satir);
+  updateGelirTablo();
+  incomeForm.reset();
+});
+
+function updateGelirTablo() {
+  gelirTablo.innerHTML = '';
+  gelirData.forEach((veri, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td style="padding: 0.5rem; text-align: center;">${veri.kanal}</td>
+      <td style="text-align: center;">${veri.tarih}</td>
+      <td style="text-align: right;">₺${parseFloat(veri.ciro).toFixed(2)}</td>
+      <td style="text-align: center;">${veri.siparis}</td>
+      <td style="text-align: center;">${veri.urunAdet}</td>
+      <td style="text-align: right;">₺${parseFloat(veri.urunTutar).toFixed(2)}</td>
+      <td style="text-align: center;">
 <style>
     body {
       margin: 0;
@@ -140,7 +169,20 @@
     <button type="submit" style="background-color: #00796b; color: white; font-weight: bold; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer; font-size: 1rem;">Kaydet</button>
   </form>
   <div id="gelirTabloAlani" style="margin-top: 2rem;">
-    <!-- Kayıtlı gelir verileri burada tablo şeklinde gösterilecek -->
+    <table style="width:100%; border-collapse: collapse; background:#fff; border-radius: 8px; overflow: hidden;">
+  <thead style="background-color: #00796b; color: white;">
+    <tr>
+      <th style="padding: 0.75rem;">Kanal</th>
+      <th>Tarih</th>
+      <th>Ciro</th>
+      <th>Sipariş</th>
+      <th>Ürün Adedi</th>
+      <th>Ürün Tutarı</th>
+      <th>Sil</th>
+    </tr>
+  </thead>
+  <tbody id="gelirTablo"></tbody>
+</table>
   </div>
 </div>
 <div id="gider" class="tab-content">
@@ -166,6 +208,46 @@
     // Uygulamanın yeni yapısı buraya entegre edilecek
     // Tasarım ve interaktif davranışlar detaylandırılacak
     // Tüm yönlendirme, giriş ve hesaplama mantığı Vue/React olmadan vanilla JS ile yapılacak (isteğe göre değiştirilebilir)
-  </script>
+  const incomeForm = document.getElementById('incomeForm');
+const gelirTablo = document.getElementById('gelirTablo');
+let gelirData = [];
+
+incomeForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const kanal = document.querySelector('input[name="channel"]:checked')?.value;
+  const tarih = document.getElementById('date').value;
+  const ciro = document.getElementById('ciro').value;
+  const siparis = document.getElementById('siparisAdedi').value;
+  const urunAdet = document.getElementById('urunAdedi').value;
+  const urunTutar = document.getElementById('urunTutari').value;
+  const satir = { kanal, tarih, ciro, siparis, urunAdet, urunTutar };
+  gelirData.push(satir);
+  updateGelirTablo();
+  incomeForm.reset();
+});
+
+function updateGelirTablo() {
+  gelirTablo.innerHTML = '';
+  gelirData.forEach((veri, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td style="padding: 0.5rem; text-align: center;">${veri.kanal}</td>
+      <td style="text-align: center;">${veri.tarih}</td>
+      <td style="text-align: right;">₺${parseFloat(veri.ciro).toFixed(2)}</td>
+      <td style="text-align: center;">${veri.siparis}</td>
+      <td style="text-align: center;">${veri.urunAdet}</td>
+      <td style="text-align: right;">₺${parseFloat(veri.urunTutar).toFixed(2)}</td>
+      <td style="text-align: center;"><button onclick="silGelir(${index})" style="color:red; background:none; border:none; cursor:pointer;">Sil</button></td>
+    `;
+    gelirTablo.appendChild(row);
+  });
+}
+
+function silGelir(index) {
+  gelirData.splice(index, 1);
+  updateGelirTablo();
+}
+
+</script>
 </body>
 </html>
