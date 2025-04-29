@@ -81,12 +81,43 @@
 </div>
 
   <div id="dashboard" class="tab-content active">
-  <div style="margin-bottom: 2rem;">
-    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-      <div style="flex:1; min-width: 200px; background:#b2dfdb; padding:1rem; border-radius:10px; text-align:center;">
-        <strong>Toplam Ciro</strong>
-        <div id="summaryCiro">₺0</div>
-      </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+    <div style="flex: 1; min-width: 300px; background: #e0f2f1; padding: 1rem; border-radius: 10px;">
+      <h3 style="text-align:center;">Web Sitesi</h3>
+      <table style="width:100%; border-collapse: collapse;">
+        <tr><td><strong>Ciro</strong></td><td id="webCiro">₺0</td></tr>
+        <tr><td><strong>Ürün Maliyeti</strong></td><td id="webUrun">₺0</td></tr>
+        <tr><td><strong>Reklam</strong></td><td id="webReklam">₺0</td></tr>
+        <tr><td><strong>Kargo</strong></td><td id="webKargo">₺0</td></tr>
+        <tr><td><strong>Diğer Giderler</strong></td><td id="webDiger">₺0</td></tr>
+        <tr><td><strong>Kar / Zarar</strong></td><td id="webKarZarar">₺0</td></tr>
+      </table>
+    </div>
+
+    <div style="flex: 1; min-width: 300px; background: #e8f5e9; padding: 1rem; border-radius: 10px;">
+      <h3 style="text-align:center;">Trendyol</h3>
+      <table style="width:100%; border-collapse: collapse;">
+        <tr><td><strong>Ciro</strong></td><td id="trendyolCiro">₺0</td></tr>
+        <tr><td><strong>Ürün Maliyeti</strong></td><td id="trendyolUrun">₺0</td></tr>
+        <tr><td><strong>Reklam</strong></td><td id="trendyolReklam">₺0</td></tr>
+        <tr><td><strong>Kargo</strong></td><td id="trendyolKargo">₺0</td></tr>
+        <tr><td><strong>Diğer Giderler</strong></td><td id="trendyolDiger">₺0</td></tr>
+        <tr><td><strong>Kar / Zarar</strong></td><td id="trendyolKarZarar">₺0</td></tr>
+      </table>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; text-align: center;">
+    <h3>Toplam</h3>
+    <table style="margin: auto; border-collapse: collapse;">
+      <tr><td><strong>Ciro</strong></td><td id="toplamCiro">₺0</td></tr>
+      <tr><td><strong>Ürün Maliyeti</strong></td><td id="toplamUrun">₺0</td></tr>
+      <tr><td><strong>Reklam</strong></td><td id="toplamReklam">₺0</td></tr>
+      <tr><td><strong>Kargo</strong></td><td id="toplamKargo">₺0</td></tr>
+      <tr><td><strong>Diğer Giderler</strong></td><td id="toplamDiger">₺0</td></tr>
+      <tr><td><strong>Kar / Zarar</strong></td><td id="toplamKarZarar">₺0</td></tr>
+    </table>
+  </div>
+</div>
       <div style="flex:1; min-width: 200px; background:#b2ebf2; padding:1rem; border-radius:10px; text-align:center;">
         <strong>Toplam Ürün Tutarı</strong>
         <div id="summaryUrun">₺0</div>
