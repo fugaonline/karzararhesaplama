@@ -109,18 +109,11 @@
     <p><strong>Kargo:</strong> <span id="toplamKargo">₺0</span></p>
     <p><strong>Diğer Giderler:</strong> <span id="toplamDiger">₺0</span></p>
     <p><strong>Kar / Zarar:</strong> <span id="toplamKarZarar">₺0</span></p>
-  </div>
-</div>
   
-</div>
-      
-      </div>
       
       </div>
     </div>
   </div>
-</div>
-
 <div id="gelir" class="tab-content">
   <h2>Gelir Girişi</h2>
   <form id="incomeForm">
@@ -182,16 +175,16 @@
     updateDashboard();
 
     form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const entry = getFormData();
-      data.push(entry);
-      saveAndRender();
-      form.reset();
-      document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.querySelector('[data-tab="gelir"]').classList.add('active');
-      document.getElementById('gelir').classList.add('active');
-    }););
+  e.preventDefault();
+  const entry = getFormData();
+  data.push(entry);
+  saveAndRender();
+  form.reset();
+  document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-tab="gelir"]').classList.add('active');
+  document.getElementById('gelir').classList.add('active');
+});
 
     function getFormData() {
       const ciro = parseFloat(document.getElementById('ciro').value);
