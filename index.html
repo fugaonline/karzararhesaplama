@@ -260,8 +260,30 @@
     });
 
     function updateDashboard() {
-  // Geçici olarak boş bırakıldı çünkü eski dashboard alanları kaldırıldı
-  // Yeni dashboard verileri hesaplanacaksa burası yeniden yazılmalı
+  let webCiro = 0, trendyolCiro = 0;
+  let webUrun = 0, trendyolUrun = 0;
+
+  data.forEach(item => {
+    if (item.channel === 'Web Sitesi') {
+      webCiro += parseFloat(item.ciro);
+      webUrun += parseFloat(item.urunTutari);
+    }
+    if (item.channel === 'Trendyol') {
+      trendyolCiro += parseFloat(item.ciro);
+      trendyolUrun += parseFloat(item.urunTutari);
+    }
+  });
+
+  document.getElementById('webCiro').textContent = '₺' + webCiro.toFixed(2);
+  document.getElementById('webUrun').textContent = '₺' + webUrun.toFixed(2);
+  document.getElementById('trendyolCiro').textContent = '₺' + trendyolCiro.toFixed(2);
+  document.getElementById('trendyolUrun').textContent = '₺' + trendyolUrun.toFixed(2);
+
+  const toplamCiro = webCiro + trendyolCiro;
+  const toplamUrun = webUrun + trendyolUrun;
+
+  document.getElementById('toplamCiro').textContent = '₺' + toplamCiro.toFixed(2);
+  document.getElementById('toplamUrun').textContent = '₺' + toplamUrun.toFixed(2);
 }
 
     function formatDate(date) {
