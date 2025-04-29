@@ -1,255 +1,146 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Ticaret Finans Takip</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> </head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#" class="tab-link active" data-tab="dashboard">DASHBOARD</a></li>
-                <li><a href="#" class="tab-link" data-tab="gelir">GELİR GİRİŞİ</a></li>
-                <li><a href="#" class="tab-link" data-tab="gider">GİDER GİRİŞİ</a></li>
-                <li><a href="#" class="tab-link" data-tab="raporlar">RAPORLAR</a></li>
-            </ul>
-        </nav>
-    </header>
+  <div id="dashboard" class="tab-content active">
+    <div class="card" style="background:#b3e5fc;">
+      <h3>ROAS</h3>
+      <p id="roasDegeri">0</p>
+    </div>
 
-    <main>
-        <section id="dashboard" class="tab-content active">
-            <h2>Dashboard</h2>
-            <div class="filters">
-                <label for="dashboard-filter">Dönem:</label>
-                <select id="dashboard-filter">
-                    <option value="this-month">Bu Ay</option>
-                    <option value="today">Bugün</option>
-                    <option value="this-week">Bu Hafta</option>
-                    <option value="this-year">Bu Yıl</option>
-                    <option value="custom">Özel Tarih Aralığı</option>
-                </select>
-                <div id="dashboard-custom-dates" class="custom-dates">
-                    <input type="date" id="dashboard-start-date">
-                    <input type="date" id="dashboard-end-date">
-                    <button id="dashboard-filter-btn">Filtrele</button>
-                </div>
-                 <div class="roas-global">
-                    ROAS (Web Sitesi): <span id="global-roas">Hesaplanıyor...</span>
-                </div>
-            </div>
+    <div class="dashboard-grid">
+      <div class="box" style="background:#f8e6e9;">
+        <h3>Web Sitesi</h3>
+        <p><strong>Ciro:</strong> <span id="webCiro">₺0,00</span></p>
+        <p><strong>Kar/Zarar:</strong> <span id="webKarZarar">₺0,00</span></p>
+      </div>
 
-            <div class="dashboard-container">
-                <div class="dashboard-box website-box">
-                    <h3><i class="fas fa-globe"></i> Web Sitesi</h3>
-                    <div class="metric">Ciro: <span id="web-ciro">0,00</span></div>
-                    <div class="sub-metric">Ürün Tutarı: <span id="web-urun-tutari">0,00</span></div>
-                    <div class="sub-metric">Kargo Geliri: <span id="web-kargo-geliri">0,00</span></div>
-                    <div class="metric">Ürün Maliyeti: <span id="web-urun-maliyeti">0,00</span></div>
-                    <div class="metric">Kargo Gideri: <span id="web-kargo-gideri">0,00</span></div>
-                    <div class="metric">Reklam Gideri: <span id="web-reklam-gideri">0,00</span></div>
-                    <div class="metric profit">Kar/Zarar: <span id="web-kar-zarar">0,00</span></div>
-                    <div class="metric">ROAS: <span id="web-roas">0,00</span></div>
-                </div>
+      <div class="box" style="background:#fff0e0;">
+        <h3>Trendyol</h3>
+        <p><strong>Ciro:</strong> <span id="trendyolCiro">₺0,00</span></p>
+        <p><strong>Kar/Zarar:</strong> <span id="trendyolKarZarar">₺0,00</span></p>
+      </div>
 
-                <div class="dashboard-box trendyol-box">
-                     <h3><i class="fas fa-store"></i> Trendyol</h3>
-                    <div class="metric">Ciro: <span id="trendyol-ciro">0,00</span></div>
-                    <div class="sub-metric">Ürün Tutarı: <span id="trendyol-urun-tutari">0,00</span></div>
-                    <div class="sub-metric">Kargo Geliri: <span id="trendyol-kargo-geliri">0,00</span></div>
-                    <div class="metric">Ürün Maliyeti: <span id="trendyol-urun-maliyeti">0,00</span></div>
-                    <div class="metric">Kargo Gideri: <span id="trendyol-kargo-gideri">0,00</span></div>
-                    <div class="metric">Reklam Gideri: <span id="trendyol-reklam-gideri">0,00</span></div>
-                    <div class="metric">Komisyon Gideri: <span id="trendyol-komisyon-gideri">0,00</span></div>
-                    <div class="metric profit">Kar/Zarar: <span id="trendyol-kar-zarar">0,00</span></div>
-                 </div>
+      <div class="box" style="background:#e3f6e0;">
+        <h3>Toplam</h3>
+        <p><strong>Ciro:</strong> <span id="toplamCiro">₺0,00</span></p>
+        <p><strong>Kar/Zarar:</strong> <span id="toplamKarZarar">₺0,00</span></p>
+      </div>
+    </div>
+  </div>
+  <div id="gelir" class="tab-content">
+    <h2>Gelir Girişi</h2>
+    <form id="incomeForm">
+      <div class="form-group">
+        <label>Kanal</label>
+        <div class="radio-group">
+          <label><input type="radio" name="channel" value="Web Sitesi" required /> Web Sitesi</label>
+          <label><input type="radio" name="channel" value="Trendyol" required /> Trendyol</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tarih</label>
+        <input type="date" id="date" required />
+      </div>
+      <div class="form-group">
+        <label>Ciro</label>
+        <input type="number" id="ciro" step="0.01" required />
+      </div>
+      <div class="form-group">
+        <label>Sipariş Adedi</label>
+        <input type="number" id="siparis" required />
+      </div>
+      <div class="form-group">
+        <label>Ürün Adedi</label>
+        <input type="number" id="urun" required />
+      </div>
+      <div class="form-group">
+        <label>Ürün Tutarı</label>
+        <input type="number" id="urunTutari" step="0.01" required />
+      </div>
+      <button type="submit" style="background:#00796b;color:white;padding:1rem;font-size:1.1rem;font-weight:bold;border-radius:8px;border:none;cursor:pointer;">Kaydet</button>
+    </form>
 
-                 <div class="dashboard-box total-box">
-                    <h3><i class="fas fa-calculator"></i> Toplam</h3>
-                    <div class="metric">Toplam Ciro: <span id="toplam-ciro">0,00</span></div>
-                     <div class="sub-metric">Toplam Ürün Tutarı: <span id="toplam-urun-tutari">0,00</span></div>
-                     <div class="sub-metric">Toplam Kargo Geliri: <span id="toplam-kargo-geliri">0,00</span></div>
-                     <div class="metric">Toplam Ürün Maliyeti: <span id="toplam-urun-maliyeti">0,00</span></div>
-                     <div class="metric">Toplam Kargo Gideri: <span id="toplam-kargo-gideri">0,00</span></div>
-                     <div class="metric">Toplam Reklam Gideri: <span id="toplam-reklam-gideri">0,00</span></div>
-                     <div class="metric">Toplam Komisyon Gideri: <span id="toplam-komisyon-gideri">0,00</span></div>
-                     <div class="metric">Diğer Giderler (Op+Vergi): <span id="toplam-diger-giderler">0,00</span></div>
-                     <div class="metric profit">Toplam Kar/Zarar: <span id="toplam-kar-zarar">0,00</span></div>
-                 </div>
-            </div>
-        </section>
+    <div id="gelirTabloAlani"></div>
+  </div>
+  <div id="gelir" class="tab-content">
+    <h2>Gelir Girişi</h2>
+    <form id="incomeForm">
+      <div class="form-group">
+        <label>Kanal</label>
+        <div class="radio-group">
+          <label><input type="radio" name="channel" value="Web Sitesi" required /> Web Sitesi</label>
+          <label><input type="radio" name="channel" value="Trendyol" required /> Trendyol</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tarih</label>
+        <input type="date" id="date" required />
+      </div>
+      <div class="form-group">
+        <label>Ciro</label>
+        <input type="number" id="ciro" step="0.01" required />
+      </div>
+      <div class="form-group">
+        <label>Sipariş Adedi</label>
+        <input type="number" id="siparis" required />
+      </div>
+      <div class="form-group">
+        <label>Ürün Adedi</label>
+        <input type="number" id="urun" required />
+      </div>
+      <div class="form-group">
+        <label>Ürün Tutarı</label>
+        <input type="number" id="urunTutari" step="0.01" required />
+      </div>
+      <button type="submit" style="background:#00796b;color:white;padding:1rem;font-size:1.1rem;font-weight:bold;border-radius:8px;border:none;cursor:pointer;">Kaydet</button>
+    </form>
 
-        <section id="gelir" class="tab-content">
-            <h2>Gelir Girişi</h2>
-            <form id="gelir-form">
-                <div class="form-group">
-                    <label for="gelir-kanal">Satış Kanalı:</label>
-                    <select id="gelir-kanal" required>
-                        <option value="">Seçiniz...</option>
-                        <option value="Web Sitesi">Web Sitesi</option>
-                        <option value="Trendyol">Trendyol</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="gelir-tarih">Tarih:</label>
-                    <input type="date" id="gelir-tarih" required>
-                </div>
-                 <div class="form-group">
-                    <label for="gelir-ciro">Ciro (₺):</label>
-                    <input type="text" id="gelir-ciro" placeholder="Örn: 1.500,50" required>
-                </div>
-                <div class="form-group">
-                    <label for="gelir-siparis-adedi">Sipariş Adedi:</label>
-                    <input type="number" id="gelir-siparis-adedi" min="0" required>
-                </div>
-                 <div class="form-group">
-                    <label for="gelir-urun-adedi">Ürün Adedi:</label>
-                    <input type="number" id="gelir-urun-adedi" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label for="gelir-urun-tutari">Ürün Tutarı (₺):</label>
-                    <input type="text" id="gelir-urun-tutari" placeholder="Örn: 1.450,00" required>
-                </div>
-                <button type="submit">Gelir Kaydet</button>
-            </form>
-             <div class="table-container">
-                <h3>Kaydedilen Gelirler</h3>
-                <table id="gelir-table">
-                    <thead>
-                        <tr>
-                            <th>Kanal</th>
-                            <th>Tarih</th>
-                            <th>Ciro (₺)</th>
-                            <th>Sipariş Adedi</th>
-                            <th>Ürün Adedi</th>
-                            <th>Ürün Tutarı (₺)</th>
-                            <th>İşlem</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gelir-table-body">
-                        </tbody>
-                </table>
-            </div>
-        </section>
+    <div id="gelirTabloAlani"></div>
+  </div>
+  <div id="gider" class="tab-content">
+    <h2>Gider Girişi</h2>
+    <form id="giderForm">
+      <div class="form-group">
+        <label>Kanal</label>
+        <select id="giderKanal" required>
+          <option value="">Seçiniz</option>
+          <option value="Web Sitesi">Web Sitesi</option>
+          <option value="Trendyol">Trendyol</option>
+          <option value="Operasyonel Gider">Operasyonel Gider</option>
+          <option value="Vergi">Vergi</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tarih</label>
+        <input type="date" id="giderTarih" required />
+      </div>
+      <div class="form-group">
+        <label>Gider Türü</label>
+        <select id="giderTuru" required>
+          <option value="">Seçiniz</option>
+          <option value="Ürün Maliyeti">Ürün Maliyeti</option>
+          <option value="Reklam">Reklam</option>
+          <option value="Kargo">Kargo</option>
+          <option value="Komisyon">Komisyon</option>
+          <option value="Diğer">Diğer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tutar (₺)</label>
+        <input type="number" id="giderTutar" step="0.01" required />
+      </div>
+      <div class="form-group">
+        <label>KDV Oranı</label>
+        <select id="giderKdv" required>
+          <option value="0">%0</option>
+          <option value="10">%10</option>
+          <option value="20">%20</option>
+          <option value="100">%100</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Açıklama</label>
+        <input type="text" id="giderAciklama" />
+      </div>
+      <button type="submit" style="background:#00796b;color:white;padding:1rem;font-size:1.1rem;font-weight:bold;border-radius:8px;border:none;cursor:pointer;">Kaydet</button>
+    </form>
 
-        <section id="gider" class="tab-content">
-            <h2>Gider Girişi</h2>
-             <form id="gider-form">
-                <div class="form-group">
-                    <label for="gider-kanal">Kanal / Gider Alanı:</label>
-                    <select id="gider-kanal" required>
-                        <option value="">Seçiniz...</option>
-                        <option value="Web Sitesi">Web Sitesi</option>
-                        <option value="Trendyol">Trendyol</option>
-                        <option value="Operasyonel Giderler">Operasyonel Giderler</option>
-                        <option value="Vergi">Vergi</option>
-                    </select>
-                </div>
-                 <div class="form-group">
-                    <label for="gider-tarih">Tarih:</label>
-                    <input type="date" id="gider-tarih" required>
-                </div>
-                 <div class="form-group">
-                    <label for="gider-tur">Gider Türü:</label>
-                    <select id="gider-tur" required>
-                        <option value="">Seçiniz...</option>
-                        <option value="Ürün Maliyeti">Ürün Maliyeti</option>
-                        <option value="Reklam">Reklam</option>
-                        <option value="Kargo">Kargo</option>
-                        <option value="Komisyon">Komisyon (Sadece Trendyol için)</option>
-                        <option value="Operasyon">Operasyon (Maaş, Kira vb.)</option>
-                        <option value="Vergi Odeme">Vergi Ödeme</option>
-                         <option value="Diger">Diğer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="gider-tutar">Tutar (₺):</label>
-                    <input type="text" id="gider-tutar" placeholder="Örn: 550,75" required>
-                </div>
-                <div class="form-group">
-                    <label for="gider-kdv">KDV Oranı:</label>
-                    <select id="gider-kdv" required>
-                        <option value="0">%0</option>
-                        <option value="10">%10</option>
-                        <option value="20">%20</option>
-                        <option value="100">%100 (Özel Matrah vb. için)</option>
-                     </select>
-                </div>
-                 <div class="form-group">
-                    <label for="gider-aciklama">Açıklama:</label>
-                    <input type="text" id="gider-aciklama">
-                </div>
-                <button type="submit">Gider Kaydet</button>
-            </form>
-            <div class="table-container">
-                <h3>Kaydedilen Giderler</h3>
-                <table id="gider-table">
-                    <thead>
-                        <tr>
-                            <th>Kanal / Alan</th>
-                            <th>Tarih</th>
-                            <th>Gider Türü</th>
-                            <th>Tutar (₺)</th>
-                            <th>KDV (%)</th>
-                            <th>Açıklama</th>
-                            <th>İşlem</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gider-table-body">
-                        </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="raporlar" class="tab-content">
-            <h2>Raporlar</h2>
-            <div class="filters">
-                 <label for="rapor-filter">Dönem:</label>
-                <select id="rapor-filter">
-                    <option value="last-30-days">Son 30 Gün</option>
-                    <option value="this-month">Bu Ay</option>
-                    <option value="last-month">Geçen Ay</option>
-                    <option value="today">Bugün</option>
-                    <option value="this-week">Bu Hafta</option>
-                    <option value="last-7-days">Son 7 Gün</option>
-                    <option value="last-14-days">Son 14 Gün</option>
-                     <option value="this-year">Bu Yıl</option>
-                    <option value="custom">Özel Tarih Aralığı</option>
-                </select>
-                <div id="rapor-custom-dates" class="custom-dates">
-                    <input type="date" id="rapor-start-date">
-                    <input type="date" id="rapor-end-date">
-                    <button id="rapor-filter-btn">Filtrele</button>
-                </div>
-            </div>
-
-            <div class="rapor-container">
-                <div class="rapor-box">
-                    <h3>Ortalama Değerler</h3>
-                    <p>Ort. Günlük Ciro: <span id="rapor-ort-gunluk-ciro">0,00</span> ₺</p>
-                    <p>Ort. Günlük Sipariş: <span id="rapor-ort-gunluk-siparis">0</span></p>
-                    <p>Ort. Günlük Ürün Adedi: <span id="rapor-ort-gunluk-urun">0</span></p>
-                </div>
-                 <div class="rapor-box">
-                    <h3>Kargo Durumu (Web Sitesi)</h3>
-                    <p>Kargo Geliri: <span id="rapor-kargo-geliri">0,00</span> ₺</p>
-                    <p>Kargo Gideri: <span id="rapor-kargo-gideri">0,00</span> ₺</p>
-                    <p>Kargo Pozisyonu: <span id="rapor-kargo-pozisyonu">0,00</span> ₺</p>
-                </div>
-                <div class="rapor-box">
-                    <h3>KDV Raporu</h3>
-                    <p>Hesaplanan KDV: <span id="rapor-hesaplanan-kdv">0,00</span> ₺</p>
-                    <p>İndirilecek KDV: <span id="rapor-indirilecek-kdv">0,00</span> ₺</p>
-                    <p>KDV Pozisyonu: <span id="rapor-kdv-pozisyonu">0,00</span> ₺</p>
-                 </div>
-             </div>
-        </section>
-    </main>
-
-    <footer>
-        </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+    <div id="giderTabloAlani"></div>
+  </div>
