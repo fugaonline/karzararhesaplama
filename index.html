@@ -7,23 +7,24 @@
   <style>
     * {
       box-sizing: border-box;
-      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
     body {
       margin: 0;
-      padding: 1.5rem;
-      background: linear-gradient(135deg, #fceabb, #f8b500);
+      padding: 2rem;
+      background: #fff;
       color: #333;
     }
     h2 {
+      color: #333;
       margin-bottom: 1rem;
-      color: #ff6f00;
+      font-size: 1.5rem;
     }
     section {
-      background: #ffffffee;
+      background: #f9f9f9;
       padding: 1.5rem;
       border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       margin-bottom: 2rem;
     }
     .form-row {
@@ -33,68 +34,55 @@
     }
     .form-row > div {
       flex: 1;
-      min-width: 160px;
+      min-width: 200px;
     }
     input, select, textarea, button {
       width: 100%;
-      padding: 0.7rem 1rem;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      background: #fff;
-    }
-    textarea {
-      resize: vertical;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
     }
     button {
-      background-color: #ff6f00;
+      background: #4caf50;
       color: white;
+      border: none;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.3s;
-      border: none;
     }
     button:hover {
-      background-color: #e65100;
+      background: #388e3c;
     }
-    .radio-group {
-      display: flex;
-      flex-wrap: wrap;
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .radio-group label {
-      background: #ffe0b2;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .radio-group input[type="radio"] {
-      accent-color: #ff6f00;
     }
     .summary-box {
-      background-color: #fff3e0;
-      border-left: 6px solid #ff6f00;
       padding: 1rem;
-      border-radius: 14px;
+      border-radius: 12px;
+      color: #333;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
+    .summary-box.ws {
+      background: #fce4ec;
+      border-left: 6px solid #f06292;
+    }
+    .summary-box.trendyol {
+      background: #fff3e0;
+      border-left: 6px solid #ffb74d;
+    }
+    .summary-box.total {
+      background: #e8f5e9;
+      border-left: 6px solid #81c784;
     }
     .summary-box strong {
       font-size: 1.2rem;
       display: block;
       margin-bottom: 0.5rem;
     }
-    @media (max-width: 480px) {
-      .radio-group {
+    @media (max-width: 600px) {
+      .form-row {
         flex-direction: column;
       }
     }
@@ -102,19 +90,19 @@
 </head>
 <body>
   <h2>Özet</h2>
-  <section class="grid">
-    <div class="summary-box">
+  <section class="summary-grid">
+    <div class="summary-box ws">
       <strong>Web Sitesi</strong>
       Ciro: <span id="ws-ciro">0</span><br>
       Kar/Zarar: <span id="ws-kar">0</span><br>
       ROAS: <span id="ws-roas">0</span>
     </div>
-    <div class="summary-box">
+    <div class="summary-box trendyol">
       <strong>Trendyol</strong>
       Ciro: <span id="ty-ciro">0</span><br>
       Kar/Zarar: <span id="ty-kar">0</span>
     </div>
-    <div class="summary-box">
+    <div class="summary-box total">
       <strong>Toplam</strong>
       Ciro: <span id="toplam-ciro">0</span><br>
       Kar/Zarar: <span id="toplam-kar">0</span>
@@ -124,11 +112,14 @@
   <h2>Gelir Girişi</h2>
   <section>
     <form id="income-form">
-      <div class="radio-group">
-        <label><input type="radio" name="kanal" value="Web Sitesi" required> Web Sitesi</label>
-        <label><input type="radio" name="kanal" value="Trendyol"> Trendyol</label>
-      </div>
       <div class="form-row">
+        <div>
+          <select name="kanal" required>
+            <option value="">Satış Kanalı Seçin</option>
+            <option value="Web Sitesi">Web Sitesi</option>
+            <option value="Trendyol">Trendyol</option>
+          </select>
+        </div>
         <div><input type="month" name="tarih" required></div>
         <div><input type="text" name="ciro" placeholder="Ciro (örn: 1234.56)" required></div>
         <div><input type="text" name="siparis_adedi" placeholder="Sipariş Adedi"></div>
@@ -145,6 +136,7 @@
       <div class="form-row">
         <div>
           <select name="kanal" required>
+            <option value="">Kanal Seçin</option>
             <option value="Web Sitesi">Web Sitesi</option>
             <option value="Trendyol">Trendyol</option>
             <option value="Operasyonel Giderler">Operasyonel Giderler</option>
@@ -154,6 +146,7 @@
         <div><input type="month" name="tarih" required></div>
         <div>
           <select name="gider_turu" required>
+            <option value="">Gider Türü</option>
             <option value="Ürün Maliyeti">Ürün Maliyeti</option>
             <option value="Reklam">Reklam</option>
             <option value="Kargo">Kargo</option>
