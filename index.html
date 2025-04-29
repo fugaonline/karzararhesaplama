@@ -100,40 +100,29 @@
 </div>
 
 <div id="gelir" class="tab-content">
-        </div>
-        <div style="flex:1; min-width: 200px; background:#b2ebf2; padding:1rem; border-radius:10px; text-align:center;">
-          <strong>Toplam Ürün Tutarı</strong>
-          <div id="summaryUrun">₺0</div>
-        </div>
-        <div style="flex:1; min-width: 200px; background:#80deea; padding:1rem; border-radius:10px; text-align:center;">
-          <strong>Toplam Kargo Geliri</strong>
-          <div id="summaryKargo">₺0</div>
-        </div>
-      </div>
-    </div>
-    <h2>Gelir Girişi</h2>
-    <form id="incomeForm">
-      <label>Kanal</label>
-      <select id="channel" required>
-        <option value="">Seçiniz</option>
-        <option value="Web Sitesi">Web Sitesi</option>
-        <option value="Trendyol">Trendyol</option>
-        <option value="Diğer">Diğer</option>
-      </select>
-      <label>Tarih</label>
-      <input type="date" id="date" required>
-      <label>Ciro (₺)</label>
-      <input type="number" id="ciro" step="0.01" required>
-      <label>Sipariş Adedi</label>
-      <input type="number" id="siparisAdedi" required>
-      <label>Ürün Adedi</label>
-      <input type="number" id="urunAdedi" required>
-      <label>Ürün Tutarı (KDV Hariç) (₺)</label>
-      <input type="number" id="urunTutari" step="0.01" required>
-      <button type="submit">Kaydet</button>
-    </form>
-    <input type="file" id="excelInput" accept=".xlsx" style="margin-top: 1rem;">
-    <table id="dataTable">
+  <h2>Gelir Girişi</h2>
+  <form id="incomeForm">
+    <label>Kanal</label>
+    <select id="channel" required>
+      <option value="">Seçiniz</option>
+      <option value="Web Sitesi">Web Sitesi</option>
+      <option value="Trendyol">Trendyol</option>
+      <option value="Diğer">Diğer</option>
+    </select>
+    <label>Tarih</label>
+    <input type="date" id="date" required>
+    <label>Ciro (₺)</label>
+    <input type="number" id="ciro" step="0.01" required>
+    <label>Sipariş Adedi</label>
+    <input type="number" id="siparisAdedi" required>
+    <label>Ürün Adedi</label>
+    <input type="number" id="urunAdedi" required>
+    <label>Ürün Tutarı (KDV Hariç) (₺)</label>
+    <input type="number" id="urunTutari" step="0.01" required>
+    <button type="submit">Kaydet</button>
+  </form>
+  <input type="file" id="excelInput" accept=".xlsx" style="margin-top: 1rem;">
+  <table id="dataTable">
       <thead>
         <tr><th>Tarih</th><th>Kanal</th><th>Ciro</th><th>Sipariş</th><th>Ürün</th><th>Ürün Tutarı</th><th>Kargo Geliri</th><th>İşlem</th></tr>
       </thead>
